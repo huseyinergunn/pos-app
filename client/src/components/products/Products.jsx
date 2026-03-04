@@ -3,7 +3,7 @@ import ProductItem from "./ProductItem";
 import { PlusOutlined, EditOutlined } from "@ant-design/icons";
 import Add from "./Add";
 import { useNavigate } from "react-router-dom";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, ArrowUpDown } from "lucide-react";
 import { Pagination, ConfigProvider, theme, Select } from "antd";
 
 const Products = ({ categories, products, setProducts, filtered, refreshData, setSortOption }) => {
@@ -24,9 +24,7 @@ const Products = ({ categories, products, setProducts, filtered, refreshData, se
  return (
     <>
       <div className="flex flex-col gap-6">
-        
         <div className="flex flex-col xl:flex-row gap-4 justify-between items-center">
-          
           {isAdmin ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full xl:w-2/3">
               <button
@@ -53,37 +51,36 @@ const Products = ({ categories, products, setProducts, filtered, refreshData, se
             <div className="hidden xl:block xl:w-2/3"></div>
           )}
 
-          <div className="w-full xl:w-1/3 flex justify-end group">
+          <div className="w-full xl:w-1/3 flex justify-end group relative">
             <ConfigProvider
               theme={{
                 algorithm: isDark ? theme.darkAlgorithm : theme.defaultAlgorithm,
-                components: {
-                  Select: {
-                    optionSelectedBg: "rgba(37, 99, 235, 0.1)",
-                    optionSelectedColor: "#2563eb",
-                    optionActiveBg: "rgba(255, 255, 255, 0.05)",
-                    borderRadius: 16,
-                    colorBgElevated: isDark ? "rgba(15, 23, 42, 0.95)" : "rgba(255, 255, 255, 0.95)",
-                  },
-                },
+                token: {
+                    borderRadius: 20,
+                    colorBgElevated: isDark ? "#0f172a" : "#ffffff",
+                    controlItemBgActive: isDark ? "rgba(37, 99, 235, 0.2)" : "rgba(37, 99, 235, 0.1)",
+                }
               }}
             >
-              <Select
-                placeholder="Sıralama Seçin"
-                defaultValue="random"
-                variant="filled" 
-                popupClassName="modern-dropdown"
-                suffixIcon={<ChevronDown size={16} className="text-slate-400 group-hover:text-blue-500 transition-colors" />}
-                className="w-full h-12 rounded-[1.2rem] bg-white/10 dark:bg-slate-900/40 backdrop-blur-xl border border-white/40 dark:border-slate-800/50 shadow-sm hover:border-blue-500/50 transition-all duration-300 font-bold text-slate-700 dark:text-slate-200"
-                onChange={(value) => setSortOption(value)}
-                options={[
-                  { value: 'random', label: '✨ Rastgele Sırala' },
-                  { value: 'alphabetical', label: '🔤 A\'dan Z\'ye' },
-                  { value: 'price-asc', label: '📉 Ucuzdan Pahalıya' },
-                  { value: 'price-desc', label: '📈 Pahalıdan Ucuza' },
-                  { value: 'newest', label: '🆕 En Yeni Ürünler' },
-                ]}
-              />
+              <div className="relative w-full">
+                <ArrowUpDown size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 z-10 pointer-events-none" />
+                <Select
+                    placeholder="Sıralama Seçin"
+                    defaultValue="random"
+                    variant="borderless"
+                    popupClassName="modern-dropdown"
+                    suffixIcon={<ChevronDown size={16} className="text-slate-400" />}
+                    className="w-full h-14 pl-8 rounded-[1.5rem] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm transition-all duration-300 font-bold text-slate-700 dark:text-slate-200 overflow-hidden"
+                    onChange={(value) => setSortOption(value)}
+                    options={[
+                        { value: 'random', label: '✨ Rastgele Sırala' },
+                        { value: 'alphabetical', label: '🔤 A\'dan Z\'ye' },
+                        { value: 'price-asc', label: '📉 Ucuzdan Pahalıya' },
+                        { value: 'price-desc', label: '📈 Pahalıdan Ucuza' },
+                        { value: 'newest', label: '🆕 En Yeni Ürünler' },
+                    ]}
+                />
+              </div>
             </ConfigProvider>
           </div>
         </div>
@@ -118,6 +115,12 @@ const Products = ({ categories, products, setProducts, filtered, refreshData, se
           </div>
         )}
       </div>
+
+      <style dangerouslySetInnerHTML={{ __html: `
+        .modern-dropdown { border-radius: 24px !important; padding: 8px !important; border: 1px solid rgba(255,255,255,0.1) !important; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important; }
+        .modern-dropdown .ant-select-item { border-radius: 12px !important; margin-bottom: 4px !important; padding: 10px 12px !important; font-weight: 600 !important; transition: all 0.2s !important; }
+        .ant-select-selector { box-shadow: none !important; border: none !important; outline: none !important; }
+      `}} />
 
       {isAdmin && (
         <Add

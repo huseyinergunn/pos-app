@@ -27,7 +27,11 @@ const connect = async () => {
 
 app.use(logger("dev"));
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: ["https://nexpos-app.vercel.app", "http://localhost:3000"],
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
+}));
 
 app.use("/api/categories", categoryRoute);
 app.use("/api/products", productRoute);

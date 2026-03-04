@@ -3,6 +3,9 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
+  define: {
+    'process.env': {},
+  },
   resolve: {
     alias: {
       '@ant-design/icons-svg/es/asn/': '@ant-design/icons-svg/lib/asn/',

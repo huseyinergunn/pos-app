@@ -1,7 +1,7 @@
 import { addProduct } from "../../redux/slices/cartSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { message } from "antd";
-import { ShoppingCartOutlined, PlusOutlined } from "@ant-design/icons"; // PlusOutlined eklendi
+import { ShoppingCartOutlined, PlusOutlined } from "@ant-design/icons";
 
 const ProductItem = ({ item }) => {
   const dispatch = useDispatch();

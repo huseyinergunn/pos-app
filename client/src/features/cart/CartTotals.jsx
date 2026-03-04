@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, App, Modal } from "antd"; // message yerine App eklendi
+import { Button, App, Modal } from "antd";
 import { CloseOutlined, MinusOutlined, PlusOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import { useCart } from "../../hooks/useCart";
 import CreateBillModal from "../../components/cart/CreateBillModal";
@@ -9,7 +9,6 @@ const CartTotals = ({ onClose }) => {
   const { cartItems, grandTotal, addItem, decreaseItem, deleteItem, clearCart } = useCart();
   const [isModalOpen, setIsModalOpen] = useState(false);
   
-  // Ant Design App Hook'ları (Dark mode uyumlu mesaj ve modal için)
   const { message, modal } = App.useApp();
 
   const taxDivider = 1 + TAX_RATE / 100;
@@ -19,7 +18,7 @@ const CartTotals = ({ onClose }) => {
   const isLoggedIn = Boolean(user?.token);
 
   const handleClear = () => {
-    modal.confirm({ // Modal.confirm yerine modal.confirm (context uyumlu)
+    modal.confirm({
       title: 'Sepeti Boşalt?',
       content: 'Tüm ürünler silinecek. Emin misiniz?',
       okText: 'Evet, Sil',

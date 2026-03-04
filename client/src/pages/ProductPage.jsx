@@ -79,7 +79,12 @@ const ProductPage = () => {
     <ConfigProvider 
       theme={{ 
         algorithm: isDark ? theme.darkAlgorithm : theme.defaultAlgorithm,
-        token: { colorPrimary: '#2563eb', borderRadius: 20 }
+        token: { 
+          colorPrimary: '#2563eb', 
+          borderRadius: 20,
+          colorBgContainer: isDark ? '#0f172a' : '#ffffff',
+          colorBorder: isDark ? '#1e293b' : '#e2e8f0'
+        }
       }}
     >
       <div className="min-h-screen bg-transparent p-4 md:p-10 transition-all duration-300">
@@ -105,7 +110,7 @@ const ProductPage = () => {
               <input 
                 type="text"
                 placeholder="Ürün ismi ile ara..."
-                className="w-full pl-12 pr-4 h-12 rounded-2xl bg-white dark:bg-slate-900 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-800 outline-none transition-all shadow-sm"
+                className="w-full pl-12 pr-4 h-12 rounded-2xl bg-white dark:bg-slate-900 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-800 outline-none transition-all shadow-sm focus:border-blue-500"
                 onChange={(e) => {
                   setSearchText(e.target.value);
                   dispatch(setSearch(e.target.value.toLowerCase()));
@@ -158,6 +163,23 @@ const ProductPage = () => {
           )}
         </div>
       </div>
+
+      <style dangerouslySetInnerHTML={{ __html: `
+        .ant-select-selector { background-color: transparent !important; border: none !important; box-shadow: none !important; }
+        .ant-select-focused .ant-select-selector { box-shadow: none !important; }
+        .ant-btn:focus { outline: none !important; }
+        input:focus { outline: none !important; box-shadow: none !important; }
+        .dark .ant-table { background: transparent !important; }
+        .dark .ant-table-thead > tr > th {
+          background: #0f172a !important;
+          color: #64748b !important;
+          border-bottom: 1px solid #1e293b !important;
+          text-transform: uppercase;
+          font-size: 10px;
+          letter-spacing: 0.1em;
+          font-weight: 900;
+        }
+      `}} />
     </ConfigProvider>
   );
 };

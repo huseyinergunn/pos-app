@@ -47,16 +47,22 @@ const ProductPage = () => {
   }, [refreshData]);
 
   const filteredProducts = useMemo(() => {
-    let result = [...products];
-    if (searchText) {
-      result = result.filter((p) => p.title?.toLowerCase().includes(searchText.toLowerCase()));
-    }
-    if (selectedCategory !== "Tümü") {
-      result = result.filter((p) => p.category?.localeCompare(selectedCategory, "tr", { sensitivity: "base" }) === 0);
-    }
-    if (sortOrder === "price-asc") result.sort((a, b) => a.price - b.price);
-    if (sortOrder === "price-desc") result.sort((a, b) => b.price - a.price);
-    return result;
+    return products
+      .filter((p) => {
+        const title = p.title || "";
+        const category = p.category || "";
+        
+        const matchesSearch = title.toLocaleLowerCase("tr").includes(searchText.toLocaleLowerCase("tr"));
+        const matchesCategory = selectedCategory === "Tümü" || 
+          category.localeCompare(selectedCategory, "tr", { sensitivity: "base" }) === 0;
+
+        return matchesSearch && matchesCategory;
+      })
+      .sort((a, b) => {
+        if (sortOrder === "price-asc") return a.price - b.price;
+        if (sortOrder === "price-desc") return b.price - a.price;
+        return 0;
+      });
   }, [products, searchText, selectedCategory, sortOrder]);
 
   if (!isAdmin) {
@@ -94,8 +100,6 @@ const ProductPage = () => {
       }}
     >
       <div className="min-h-screen bg-transparent p-4 md:p-10 transition-all duration-300">
-        
-       
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-8 mb-12">
           <div className="flex items-center gap-5">
             <div className="bg-white dark:bg-slate-900 p-4 rounded-3xl shadow-xl shadow-blue-100/20 dark:shadow-none border border-slate-100 dark:border-slate-800 transition-all duration-300">
@@ -116,7 +120,6 @@ const ProductPage = () => {
           </div>
 
           <div className="flex flex-wrap items-center gap-4 w-full lg:w-auto">
-           
             <div className="relative flex-1 min-w-[240px] group">
               <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors z-10">
                 <Search size={18} strokeWidth={2.5} />
@@ -124,7 +127,7 @@ const ProductPage = () => {
               <input 
                 type="text"
                 placeholder="Ürün ismi ile ara..."
-                className="w-full pl-12 pr-4 h-12 rounded-2xl bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder:text-slate-500 border border-slate-200 dark:border-slate-800 outline-none focus:border-blue-500 transition-all shadow-sm"
+                className="w-full pl-12 pr-4 h-12 rounded-2xl bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder:text-slate-500 border border-slate-200 dark:border-slate-800 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm"
                 onChange={(e) => {
                   setSearchText(e.target.value);
                   dispatch(setSearch(e.target.value.toLowerCase()));
@@ -137,7 +140,7 @@ const ProductPage = () => {
               value={selectedCategory}
               onChange={setSelectedCategory}
               variant="borderless"
-              className="w-full md:w-48 h-12 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 transition-all"
+              className="w-full md:w-48 h-12 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 transition-all focus-within:ring-2 focus-within:ring-blue-500/20"
               popupClassName="dark:bg-slate-900 rounded-xl"
               options={[
                 { value: "Tümü", label: <span className="text-[11px] font-bold uppercase tracking-tight">Tümü</span> },
@@ -150,7 +153,7 @@ const ProductPage = () => {
 
             <Select
               placeholder={<span className="text-slate-500 text-[10px] font-black uppercase tracking-widest">Sıralama</span>}
-              className="w-full md:w-44 h-12 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 transition-all"
+              className="w-full md:w-44 h-12 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 transition-all focus-within:ring-2 focus-within:ring-blue-500/20"
               variant="borderless"
               onChange={(val) => setSortOrder(val)}
               allowClear
@@ -165,7 +168,7 @@ const ProductPage = () => {
               type="primary" 
               icon={<PlusOutlined />} 
               onClick={() => setIsAddModalOpen(true)}
-              className="w-full md:w-auto h-12 rounded-2xl bg-blue-600 hover:bg-blue-700 border-none px-8 font-black text-[11px] tracking-widest shadow-xl shadow-blue-500/20 uppercase"
+              className="w-full md:w-auto h-12 rounded-2xl bg-blue-600 hover:bg-blue-700 border-none px-8 font-black text-[11px] tracking-widest shadow-xl shadow-blue-500/20 uppercase focus:ring-2 focus:ring-blue-500/20"
             >
               Yeni Ürün
             </Button>
@@ -196,7 +199,12 @@ const ProductPage = () => {
       </div>
 
       <style dangerouslySetInnerHTML={{ __html: `
-        .ant-select-selector { background-color: transparent !important; }
+        /* Ant Design Focus Gölgesini Kapatan Global Fix */
+        .ant-select:focus, .ant-select-focused, .ant-btn:focus {
+           outline: none !important;
+           box-shadow: none !important;
+        }
+        .ant-select-selector { background-color: transparent !important; border: none !important; box-shadow: none !important; }
         .ant-select-selection-item { font-weight: 700 !important; }
         .dark .ant-table { background: transparent !important; }
         .dark .ant-table-thead > tr > th {

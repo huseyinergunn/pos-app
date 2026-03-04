@@ -6,11 +6,7 @@ export default defineConfig({
   define: {
     'process.env': {},
   },
-  build: {
-    minify: 'esbuild',
-  },
   server: {
-    open: true,
     port: 3000,
   }
 })

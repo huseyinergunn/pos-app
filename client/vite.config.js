@@ -6,32 +6,8 @@ export default defineConfig({
   define: {
     'process.env': {},
   },
-  resolve: {
-    alias: {
-      '@ant-design/icons-svg/es/asn/': '@ant-design/icons-svg/lib/asn/',
-    },
-  },
   build: {
-    rollupOptions: {
-      output: {
-        manualChunks(id) {
-          if (id.includes('antd') || id.includes('@ant-design')) {
-            return 'antd-vendor';
-          }
-          if (id.includes('node_modules')) {
-            return 'vendor';
-          }
-        },
-      },
-    },
-    assetsInlineLimit: 4096,
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: true,
-        drop_debugger: true,
-      },
-    },
+    minify: 'esbuild',
   },
   server: {
     open: true,

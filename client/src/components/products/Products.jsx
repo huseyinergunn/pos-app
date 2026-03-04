@@ -71,7 +71,7 @@ const Products = ({ categories, products, setProducts, filtered, refreshData, se
               <Select
                 placeholder="Sıralama Seçin"
                 defaultValue="random"
-                variant="borderless" 
+                variant="filled" 
                 popupClassName="modern-dropdown"
                 suffixIcon={<ChevronDown size={16} className="text-slate-400 group-hover:text-blue-500 transition-colors" />}
                 className="w-full h-12 rounded-[1.2rem] bg-white/10 dark:bg-slate-900/40 backdrop-blur-xl border border-white/40 dark:border-slate-800/50 shadow-sm hover:border-blue-500/50 transition-all duration-300 font-bold text-slate-700 dark:text-slate-200"

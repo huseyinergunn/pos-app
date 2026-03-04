@@ -139,7 +139,7 @@ const ProductPage = () => {
               placeholder={<span className="text-slate-500 text-[10px] font-black uppercase tracking-widest">Kategori</span>}
               value={selectedCategory}
               onChange={setSelectedCategory}
-              variant="borderless"
+              variant="filled"
               className="w-full md:w-48 h-12 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 transition-all focus-within:ring-2 focus-within:ring-blue-500/20"
               popupClassName="dark:bg-slate-900 rounded-xl"
               options={[

@@ -1,8 +1,8 @@
 import React, { useState, useMemo, useEffect, useCallback } from "react";
 import Edit from "../components/products/Edit";
-import { ConfigProvider, theme, Select, Button, message, Result } from "antd";
+import { ConfigProvider, theme, Button, message, Result } from "antd";
 import { PlusOutlined, DatabaseOutlined } from "@ant-design/icons";
-import { Search } from "lucide-react"; 
+import { Search, ChevronDown, Filter, ArrowUpDown } from "lucide-react"; 
 import { useDispatch } from "react-redux";
 import { setSearch } from "../redux/slices/productSlice";
 import API from "../config/appConfig";
@@ -17,7 +17,7 @@ const ProductPage = () => {
   const [categories, setCategories] = useState([]);
   const [searchText, setSearchText] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("Tümü");
-  const [sortOrder, setSortOrder] = useState(null);
+  const [sortOrder, setSortOrder] = useState("");
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -36,7 +36,7 @@ const ProductPage = () => {
       setCategories(catRes.data || []);
     } catch (err) {
       message.error("Veriler yüklenirken bir hata oluştu.");
-      console.error("API HATASI:", err);
+      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -68,7 +68,6 @@ const ProductPage = () => {
         <Result
           status="403"
           title={<h2 className="text-3xl font-black tracking-tighter dark:text-white uppercase m-0">YETKİSİZ ERİŞİM</h2>}
-          subTitle={<p className="text-slate-500 dark:text-slate-400 font-medium text-base mt-2">Bu panel yalnızca yönetici yetkisine sahip kullanıcılar içindir.</p>}
           extra={<Button type="primary" size="large" className="h-12 px-10 rounded-2xl font-bold bg-blue-600 border-none" onClick={() => navigate("/")}>Ana Sayfaya Dön</Button>}
         />
       </div>
@@ -76,19 +75,10 @@ const ProductPage = () => {
   }
 
   return (
-    <ConfigProvider 
-      theme={{ 
-        algorithm: isDark ? theme.darkAlgorithm : theme.defaultAlgorithm,
-        token: { 
-          colorPrimary: '#2563eb', 
-          borderRadius: 20,
-          colorBgContainer: isDark ? '#0f172a' : '#ffffff',
-          colorBorder: isDark ? '#1e293b' : '#e2e8f0'
-        }
-      }}
-    >
+    <ConfigProvider theme={{ algorithm: isDark ? theme.darkAlgorithm : theme.defaultAlgorithm }}>
       <div className="min-h-screen bg-transparent p-4 md:p-10 transition-all duration-300">
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-8 mb-12">
+          
           <div className="flex items-center gap-5">
             <div className="bg-white dark:bg-slate-900 p-4 rounded-3xl shadow-xl border border-slate-100 dark:border-slate-800">
               <DatabaseOutlined className="text-blue-600 text-3xl" />
@@ -103,14 +93,13 @@ const ProductPage = () => {
           </div>
 
           <div className="flex flex-wrap items-center gap-4 w-full lg:w-auto">
-            <div className="relative flex-1 min-w-[240px]">
-              <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 z-10">
-                <Search size={18} strokeWidth={2.5} />
-              </div>
+            {/* Search Input */}
+            <div className="relative flex-1 min-w-[200px]">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
               <input 
                 type="text"
-                placeholder="Ürün ismi ile ara..."
-                className="w-full pl-12 pr-4 h-12 rounded-2xl bg-white dark:bg-slate-900 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-800 outline-none transition-all shadow-sm focus:border-blue-500"
+                placeholder="Ara..."
+                className="w-full pl-12 pr-4 h-12 rounded-2xl bg-white dark:bg-slate-900 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-800 outline-none focus:border-blue-500 transition-all"
                 onChange={(e) => {
                   setSearchText(e.target.value);
                   dispatch(setSearch(e.target.value.toLowerCase()));
@@ -118,35 +107,42 @@ const ProductPage = () => {
               />
             </div>
 
-            <Select
-              placeholder="Kategori"
-              value={selectedCategory}
-              onChange={setSelectedCategory}
-              className="w-full md:w-48 h-12 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800"
-              variant="borderless"
-              options={[
-                { value: "Tümü", label: "Tümü" },
-                ...categories.map((c) => ({ value: c.title, label: c.title })),
-              ]}
-            />
+           
+            <div className="relative w-full md:w-48 group">
+              <Filter className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={16} />
+              <select 
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+                className="w-full h-12 pl-11 pr-4 rounded-2xl bg-white dark:bg-slate-900 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-800 outline-none appearance-none cursor-pointer focus:border-blue-500 transition-all font-bold text-[12px] uppercase tracking-wider"
+              >
+                <option value="Tümü">Tüm Kategoriler</option>
+                {categories.map((c) => (
+                  <option key={c._id} value={c.title}>{c.title}</option>
+                ))}
+              </select>
+              <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={16} />
+            </div>
 
-            <Select
-              placeholder="Sıralama"
-              className="w-full md:w-44 h-12 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800"
-              variant="borderless"
-              onChange={(val) => setSortOrder(val)}
-              allowClear
-              options={[
-                { value: "price-asc", label: "En Düşük" },
-                { value: "price-desc", label: "En Yüksek" }
-              ]}
-            />
+            
+            <div className="relative w-full md:w-44 group">
+              <ArrowUpDown className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={16} />
+              <select 
+                value={sortOrder}
+                onChange={(e) => setSortOrder(e.target.value)}
+                className="w-full h-12 pl-11 pr-4 rounded-2xl bg-white dark:bg-slate-900 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-800 outline-none appearance-none cursor-pointer focus:border-blue-500 transition-all font-bold text-[12px] uppercase tracking-wider"
+              >
+                <option value="">Sıralama Seç</option>
+                <option value="price-asc">En Düşük Fiyat</option>
+                <option value="price-desc">En Yüksek Fiyat</option>
+              </select>
+              <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={16} />
+            </div>
 
             <Button 
               type="primary" 
               icon={<PlusOutlined />} 
               onClick={() => setIsAddModalOpen(true)}
-              className="w-full md:w-auto h-12 rounded-2xl bg-blue-600 border-none px-8 font-black text-[11px] tracking-widest uppercase"
+              className="w-full md:w-auto h-12 rounded-2xl bg-blue-600 border-none px-8 font-black text-[11px] tracking-widest uppercase shadow-lg shadow-blue-500/20"
             >
               Yeni Ürün
             </Button>
@@ -159,27 +155,10 @@ const ProductPage = () => {
               <Edit products={filteredProducts} categories={categories} refreshData={refreshData} isAddModalOpen={isAddModalOpen} setIsAddModalOpen={setIsAddModalOpen} />
             </div>
           ) : (
-            <div className="flex flex-col items-center justify-center py-32 font-black uppercase tracking-[0.3em] text-[10px] text-slate-400">Veriler İşleniyor</div>
+            <div className="flex flex-col items-center justify-center py-32 font-black uppercase tracking-[0.3em] text-[10px] text-slate-400 animate-pulse">Veriler İşleniyor</div>
           )}
         </div>
       </div>
-
-      <style dangerouslySetInnerHTML={{ __html: `
-        .ant-select-selector { background-color: transparent !important; border: none !important; box-shadow: none !important; }
-        .ant-select-focused .ant-select-selector { box-shadow: none !important; }
-        .ant-btn:focus { outline: none !important; }
-        input:focus { outline: none !important; box-shadow: none !important; }
-        .dark .ant-table { background: transparent !important; }
-        .dark .ant-table-thead > tr > th {
-          background: #0f172a !important;
-          color: #64748b !important;
-          border-bottom: 1px solid #1e293b !important;
-          text-transform: uppercase;
-          font-size: 10px;
-          letter-spacing: 0.1em;
-          font-weight: 900;
-        }
-      `}} />
     </ConfigProvider>
   );
 };

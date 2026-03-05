@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
-const Product = require("./models/Product.js"); // Product modelinin yolu doğru mu kontrol et
+const Product = require("./models/Product.js");
 const products = require("./products.json");
 
 dotenv.config();

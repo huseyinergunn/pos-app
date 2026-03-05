@@ -103,6 +103,7 @@ const Edit = ({ isEditModalOpen, setIsEditModalOpen, categories, setCategories }
       ),
     },
   ];
+  const safeCategories = Array.isArray(categories) ? categories : [];
 
   return (
     <Modal
@@ -114,7 +115,7 @@ const Edit = ({ isEditModalOpen, setIsEditModalOpen, categories, setCategories }
       }}
       width={700}
       centered
-      destroyOnClose
+      destroyOnHidden
       styles={{
         content: {
           backgroundColor: isDark ? "#0f172a" : "#ffffff",
@@ -140,7 +141,7 @@ const Edit = ({ isEditModalOpen, setIsEditModalOpen, categories, setCategories }
       <Form form={form} onFinish={onFinish}>
         <div className="rounded-2xl overflow-hidden border border-slate-100 dark:border-slate-800">
           <Table
-            dataSource={categories}
+            dataSource={safeCategories}
             columns={columns}
             rowKey="_id"
             pagination={{ 

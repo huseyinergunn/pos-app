@@ -15,14 +15,12 @@ router.get("/get-all", async (req, res) => {
 
 router.post("/add-category", verifyAdmin, async (req, res) => {
   try {
-    // Frontend'den gelen başlığı temizleyerek (trim) kaydetmek en iyisidir
     const newCategory = new Category({
-      title: req.body.title // Direkt req.body yerine title'ı açıkça belirtmek daha güvenli
+      title: req.body.title 
     });
     
     await newCategory.save();
     
-    // ÖNEMLİ: Sadece metin değil, eklenen objeyi dönmek frontend'in kafasını karıştırmaz
     res.status(200).json(newCategory); 
   } catch (error) {
     console.error("Kategori Ekleme Hatası:", error);
@@ -32,11 +30,9 @@ router.post("/add-category", verifyAdmin, async (req, res) => {
 
 router.put("/update-category", verifyAdmin, async (req, res) => {
   try {
-    // Önce eski kategori adını bulmamız lazım ki ürünleri de güncelleyebilelim
     const oldCategory = await Category.findById(req.body.categoryId);
 
     if (oldCategory && oldCategory.title !== req.body.title) {
-      // Kategori adı değiştiyse, o kategoriye bağlı tüm ürünlerin kategori adını da güncelle
       await Product.updateMany(
         { category: oldCategory.title },
         { category: req.body.title },

@@ -1,8 +1,8 @@
 import React, { useState, useMemo, useEffect, useCallback } from "react";
 import Edit from "../components/products/Edit";
-import { ConfigProvider, theme, Button, message, Result, Select } from "antd";
-import { PlusOutlined, DatabaseOutlined } from "@ant-design/icons";
-import { Search, ChevronDown, Filter, ArrowUpDown } from "lucide-react"; 
+import { ConfigProvider, theme, Button, message, Select, Result } from "antd";
+import { PlusOutlined, DatabaseOutlined, LockOutlined } from "@ant-design/icons";
+import { Search, ChevronDown, ArrowUpDown } from "lucide-react"; 
 import { useDispatch } from "react-redux";
 import { setSearch } from "../redux/slices/productSlice";
 import API from "../config/appConfig";
@@ -22,7 +22,7 @@ const ProductPage = () => {
   const [loading, setLoading] = useState(true);
 
   const user = JSON.parse(localStorage.getItem("posUser"));
-  const isAdmin = user?.role === "admin";
+  const isAdmin = user?.role === "admin" && user?.token;
 
   const refreshData = useCallback(async () => {
     if (!isAdmin) return; 
@@ -62,18 +62,46 @@ const ProductPage = () => {
       });
   }, [products, searchText, selectedCategory, sortOrder]);
 
-  if (!isAdmin) {
-    return (
-      <div className="h-[80vh] flex items-center justify-center bg-transparent">
+if (!isAdmin) {
+  return (
+    <div className="h-[calc(100vh-140px)] flex flex-col items-center justify-start bg-transparent p-4 overflow-hidden pt-0">
+      
+      <div className="mt-0 w-full flex flex-col items-center">
         <Result
           status="403"
-          title={<h2 className="text-3xl font-black tracking-tighter dark:text-white uppercase m-0">YETKİSİZ ERİŞİM</h2>}
-          extra={<Button type="primary" size="large" className="h-12 px-10 rounded-2xl font-bold bg-blue-600 border-none" onClick={() => navigate("/")}>Ana Sayfaya Dön</Button>}
+          icon={
+            <div className="flex justify-center scale-75 md:scale-100">
+               <LockOutlined className="text-blue-500 text-6xl" />
+            </div>
+          }
+          title={
+            <h2 className="text-2xl font-black tracking-tighter dark:text-white uppercase m-0 mt-[-10px]">
+              YETKİSİZ ERİŞİM
+            </h2>
+          }
+          subTitle={
+            <p className="text-slate-500 dark:text-slate-400 font-medium text-sm mt-1">
+              Bu panel yalnızca yönetici yetkisine sahip kullanıcılar içindir.
+            </p>
+          }
+          extra={
+            <div className="mt-0">
+              <Button 
+                type="primary" 
+                size="large" 
+                className="h-12 px-12 rounded-2xl font-bold uppercase tracking-wider border-none bg-blue-600 shadow-xl active:scale-95 transition-transform" 
+                onClick={() => navigate("/")}
+              >
+                Ana Sayfaya Dön
+              </Button>
+            </div>
+          }
+          className="!p-0 !m-0"
         />
       </div>
-    );
-  }
-
+    </div>
+  );
+}
   return (
     <ConfigProvider 
         theme={{ 
@@ -83,7 +111,6 @@ const ProductPage = () => {
     >
       <div className="min-h-screen bg-transparent p-4 md:p-10 transition-all duration-300">
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-8 mb-12">
-          
           <div className="flex items-center gap-5">
             <div className="bg-white dark:bg-slate-900 p-4 rounded-3xl shadow-xl border border-slate-100 dark:border-slate-800">
               <DatabaseOutlined className="text-blue-600 text-3xl" />
@@ -96,7 +123,6 @@ const ProductPage = () => {
               </div>
             </div>
           </div>
-
           <div className="flex flex-wrap items-center gap-4 w-full lg:w-auto">
             <div className="relative flex-1 min-w-[200px]">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
@@ -110,7 +136,6 @@ const ProductPage = () => {
                 }}
               />
             </div>
-
             <Select 
                 value={selectedCategory}
                 onChange={setSelectedCategory}
@@ -122,7 +147,6 @@ const ProductPage = () => {
                     ...categories.map((c) => ({ value: c.title, label: c.title }))
                 ]}
             />
-
             <Select 
                 value={sortOrder}
                 onChange={setSortOrder}
@@ -135,7 +159,6 @@ const ProductPage = () => {
                     { value: "price-desc", label: "📈 En Yüksek Fiyat" }
                 ]}
             />
-
             <Button 
               type="primary" 
               icon={<PlusOutlined />} 
@@ -146,7 +169,6 @@ const ProductPage = () => {
             </Button>
           </div>
         </div>
-
         <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] shadow-2xl border border-slate-100 dark:border-slate-800 overflow-hidden">
           {!loading ? (
             <div className="p-2 md:p-6">

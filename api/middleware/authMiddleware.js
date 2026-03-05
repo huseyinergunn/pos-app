@@ -1,10 +1,9 @@
 const jwt = require("jsonwebtoken");
 
-// 1. Kalkan: Sadece giriş yapmış olanlar geçebilir
 const verifyToken = (req, res, next) => {
   const authHeader = req.headers.authorization;
   if (authHeader) {
-    const token = authHeader.split(" ")[1]; // Bearer <token>
+    const token = authHeader.split(" ")[1]; 
     jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
       if (err) return res.status(403).json("Token geçersiz!");
       req.user = user;

@@ -2,8 +2,13 @@ import axios from "axios";
 
 export const TAX_RATE = 20; 
 
+
+const BASE_URL = import.meta.env.VITE_API_URL 
+  ? `${import.meta.env.VITE_API_URL}/api` 
+  : "https://pos-app-m2qb.onrender.com/api";
+
 const API = axios.create({
-  baseURL: `${import.meta.env.VITE_API_URL}/api`, 
+  baseURL: BASE_URL, 
   headers: {
     "Content-Type": "application/json",
   },

@@ -1,7 +1,8 @@
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { Column, Pie, Line } from "@ant-design/plots";
 import { TrendingUp, DollarSign, ShoppingCart, Package } from "lucide-react"; 
-import { Card, Radio, ConfigProvider, theme, message, Skeleton, Result, Button } from "antd";
+import { Card, ConfigProvider, theme, message, Skeleton, Button, Result } from "antd";
+import {LockOutlined} from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import API from "../config/appConfig";
 
@@ -14,7 +15,7 @@ const StatisticPage = () => {
   const isDark = document.documentElement.classList.contains("dark");
 
   const user = JSON.parse(localStorage.getItem("posUser"));
-  const isAdmin = user?.role === "admin";
+  const isAdmin = user?.role === "admin" && user?.token;
 
   const fetchData = useCallback(async () => {
     if (!isAdmin) return; 
@@ -78,20 +79,46 @@ const StatisticPage = () => {
 
     return { totalRevenue, totalItemsSold, dailyData, bestSelling, productMap };
   }, [filteredBills]);
-
-  if (!isAdmin) {
-    return (
-      <div className="h-[80vh] flex items-center justify-center bg-transparent">
+if (!isAdmin) {
+  return (
+    <div className="h-[calc(100vh-140px)] flex flex-col items-center justify-start bg-transparent p-4 overflow-hidden pt-0">
+      
+      <div className="mt-0 w-full flex flex-col items-center">
         <Result
           status="403"
-          title={<h2 className="text-3xl font-black tracking-tighter dark:text-white uppercase m-0">YETKİSİZ ERİŞİM</h2>}
-          subTitle={<p className="text-slate-500 dark:text-slate-400 font-medium text-base mt-2">Bu panel yalnızca yönetici yetkisine sahip kullanıcılar içindir.</p>}
-          extra={<Button type="primary" size="large" className="h-12 px-10 rounded-2xl font-bold uppercase tracking-wider border-none bg-blue-600" onClick={() => navigate("/")}>Ana Sayfaya Dön</Button>}
+          icon={
+            <div className="flex justify-center scale-75 md:scale-100">
+               <LockOutlined className="text-blue-500 text-6xl" />
+            </div>
+          }
+          title={
+            <h2 className="text-2xl font-black tracking-tighter dark:text-white uppercase m-0 mt-[-10px]">
+              YETKİSİZ ERİŞİM
+            </h2>
+          }
+          subTitle={
+            <p className="text-slate-500 dark:text-slate-400 font-medium text-sm mt-1">
+              Bu panel yalnızca yönetici yetkisine sahip kullanıcılar içindir.
+            </p>
+          }
+          extra={
+            <div className="mt-0">
+              <Button 
+                type="primary" 
+                size="large" 
+                className="h-12 px-12 rounded-2xl font-bold uppercase tracking-wider border-none bg-blue-600 shadow-xl active:scale-95 transition-transform" 
+                onClick={() => navigate("/")}
+              >
+                Ana Sayfaya Dön
+              </Button>
+            </div>
+          }
+          className="!p-0 !m-0"
         />
       </div>
-    );
-  }
-
+    </div>
+  );
+}
   const commonTheme = isDark ? 'dark' : 'light';
 
   return (
@@ -110,34 +137,20 @@ const StatisticPage = () => {
               </div>
             </div>
           </div>
-        <div className="flex flex-col sm:flex-row items-center gap-3 bg-white dark:bg-slate-900 p-2 sm:p-2 sm:pl-6 rounded-[2.5rem] sm:rounded-[2rem] shadow-sm border border-slate-100 dark:border-slate-800 w-full md:w-auto transition-all">
-  
-  <span className="text-[9px] sm:text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] shrink-0 mt-1 sm:mt-0">
-    Zaman Aralığı
-  </span>
-  
-  <div className="flex bg-slate-100/50 dark:bg-slate-950/50 p-1 rounded-[1.4rem] sm:rounded-2xl border border-slate-200/50 dark:border-slate-800/50 relative w-full sm:w-auto">
-    {[
-      { label: "GÜN", value: "1day" },
-      { label: "HAFTA", value: "1week" },
-      { label: "TÜMÜ", value: "all" }
-    ].map((item) => (
-      <button
-        key={item.value}
-        onClick={() => setFilterType(item.value)}
-        className={`
-          relative z-10 flex-1 sm:flex-none px-4 sm:px-6 py-2 rounded-xl text-[9px] sm:text-[10px] font-black tracking-widest transition-all duration-300
-          ${filterType === item.value 
-            ? "bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 shadow-md shadow-blue-500/5 scale-[1.02]" 
-            : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 bg-transparent"
-          }
-        `}
-      >
-        {item.label}
-      </button>
-    ))}
-  </div>
-</div>
+          <div className="flex flex-col sm:flex-row items-center gap-3 bg-white dark:bg-slate-900 p-2 sm:p-2 sm:pl-6 rounded-[2.5rem] sm:rounded-[2rem] shadow-sm border border-slate-100 dark:border-slate-800 w-full md:w-auto transition-all">
+            <span className="text-[9px] sm:text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] shrink-0 mt-1 sm:mt-0">Zaman Aralığı</span>
+            <div className="flex bg-slate-100/50 dark:bg-slate-950/50 p-1 rounded-[1.4rem] sm:rounded-2xl border border-slate-200/50 dark:border-slate-800/50 relative w-full sm:w-auto">
+              {[{ label: "GÜN", value: "1day" }, { label: "HAFTA", value: "1week" }, { label: "TÜMÜ", value: "all" }].map((item) => (
+                <button
+                  key={item.value}
+                  onClick={() => setFilterType(item.value)}
+                  className={`relative z-10 flex-1 sm:flex-none px-4 sm:px-6 py-2 rounded-xl text-[9px] sm:text-[10px] font-black tracking-widest transition-all duration-300 ${filterType === item.value ? "bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 shadow-md shadow-blue-500/5 scale-[1.02]" : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 bg-transparent"}`}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
@@ -171,13 +184,9 @@ const StatisticPage = () => {
 
 const StatCard = ({ title, value, icon, color, bg, loading }) => (
   <Card className="rounded-[2.5rem] border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xl dark:shadow-none overflow-hidden transition-all">
-    {loading ? (
-      <Skeleton active paragraph={{ rows: 1 }} title={{ width: '40%' }} />
-    ) : (
+    {loading ? <Skeleton active paragraph={{ rows: 1 }} title={{ width: '40%' }} /> : (
       <div className="flex items-center gap-5">
-        <div className={`w-14 h-14 rounded-2xl ${bg} ${color} flex items-center justify-center shadow-inner`}>
-          {icon}
-        </div>
+        <div className={`w-14 h-14 rounded-2xl ${bg} ${color} flex items-center justify-center shadow-inner`}>{icon}</div>
         <div>
           <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-1">{title}</p>
           <h2 className="text-2xl font-black text-slate-900 dark:text-slate-100 tracking-tighter">{value}</h2>

@@ -21,7 +21,7 @@ const Products = ({ categories, products, setProducts, filtered, refreshData, se
   const indexOfFirstProduct = indexOfLastProduct - pageSize;
   const currentProducts = displayProducts.slice(indexOfFirstProduct, indexOfLastProduct);
 
- return (
+  return (
     <>
       <div className="flex flex-col gap-6">
         <div className="flex flex-col xl:flex-row gap-4 justify-between items-center">
@@ -68,12 +68,12 @@ const Products = ({ categories, products, setProducts, filtered, refreshData, se
                     placeholder="Sıralama Seçin"
                     defaultValue="random"
                     variant="borderless"
-                    popupClassName="modern-dropdown"
+                    classNames={{ popup: { root: "modern-dropdown" } }}
                     suffixIcon={<ChevronDown size={16} className="text-slate-400" />}
                     className="w-full h-14 pl-8 rounded-[1.5rem] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm transition-all duration-300 font-bold text-slate-700 dark:text-slate-200 overflow-hidden"
                     onChange={(value) => setSortOption(value)}
                     options={[
-                        { value: 'random', label: '✨ Rastgele Sırala' },
+                        { value: 'random', label: '✨ Önerilenler' },
                         { value: 'alphabetical', label: '🔤 A\'dan Z\'ye' },
                         { value: 'price-asc', label: '📉 Ucuzdan Pahalıya' },
                         { value: 'price-desc', label: '📈 Pahalıdan Ucuza' },
@@ -90,7 +90,7 @@ const Products = ({ categories, products, setProducts, filtered, refreshData, se
             currentProducts.map((item, index) => (
               <ProductItem 
                 item={item} 
-                key={item._id || `${index}-${item.title}`} 
+                key={item._id || `prod-${index}`} 
               />
             ))
           ) : (
@@ -107,6 +107,7 @@ const Products = ({ categories, products, setProducts, filtered, refreshData, se
                 current={currentPage}
                 total={displayProducts.length}
                 pageSize={pageSize}
+                size={"small md: default"}
                 onChange={(page) => setCurrentPage(page)}
                 showSizeChanger={false}
                 className="bg-white/40 dark:bg-slate-800/40 backdrop-blur-xl p-4 rounded-2xl shadow-sm border border-white/40 dark:border-slate-700/50"
@@ -115,12 +116,6 @@ const Products = ({ categories, products, setProducts, filtered, refreshData, se
           </div>
         )}
       </div>
-
-      <style dangerouslySetInnerHTML={{ __html: `
-        .modern-dropdown { border-radius: 24px !important; padding: 8px !important; border: 1px solid rgba(255,255,255,0.1) !important; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important; }
-        .modern-dropdown .ant-select-item { border-radius: 12px !important; margin-bottom: 4px !important; padding: 10px 12px !important; font-weight: 600 !important; transition: all 0.2s !important; }
-        .ant-select-selector { box-shadow: none !important; border: none !important; outline: none !important; }
-      `}} />
 
       {isAdmin && (
         <Add

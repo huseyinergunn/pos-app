@@ -8,7 +8,6 @@ const BillSchema = mongoose.Schema(
     cartItems: { type: Array, required: true },
     tax: { type: Number, required: true },
     totalAmount: { type: Number, required: true },
-    // YENİ ALAN BURASI:
     status: { 
       type: String, 
       default: "Ödendi" 

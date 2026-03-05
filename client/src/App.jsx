@@ -34,6 +34,14 @@ const ProtectedLayout = () => {
   );
 };
 
+const AdminLayout = () => {
+  return (
+    <Suspense fallback={<PageLoader />}>
+      <MainLayout />
+    </Suspense>
+  );
+};
+
 function App() {
   const dispatch = useDispatch();
   const [isDarkMode, setIsDarkMode] = useState(document.documentElement.classList.contains("dark"));
@@ -50,8 +58,12 @@ function App() {
     document.addEventListener("visibilitychange", handleVisibilityChange);
     
     const fetchInitialData = async () => {
-      const user = localStorage.getItem("posUser");
-      if (!user) return; 
+      const userStr = localStorage.getItem("posUser");
+      if (!userStr) return; 
+
+      const user = JSON.parse(userStr);
+      if (!user.token) return;
+
       try {
         const { data } = await API.get("/products/get-all");
         dispatch(setProducts(data));
@@ -68,12 +80,17 @@ function App() {
     };
   }, [dispatch]);
 
+  const checkIsAuthenticated = () => {
+    const userStr = localStorage.getItem("posUser");
+    if (!userStr) return false;
+    const user = JSON.parse(userStr);
+    return !!user.token;
+  };
+
   return (
     <ConfigProvider
       theme={{
-        
         algorithm: isDarkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
-        
         token: {
           colorPrimary: '#2563eb', 
           borderRadius: 16, 
@@ -81,7 +98,6 @@ function App() {
           colorBgBase: isDarkMode ? '#020617' : '#ffffff', 
           colorBgContainer: isDarkMode ? '#0f172a' : '#ffffff', 
         },
-       
         components: {
           Modal: {
             borderRadiusLG: 28, 
@@ -94,17 +110,28 @@ function App() {
         }
       }}
     >
-     
       <AntApp>
-        <BrowserRouter>
+        <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
           <Suspense fallback={<PageLoader />}>
             <Routes>
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
+              <Route 
+                path="/login" 
+                element={checkIsAuthenticated() ? <Navigate to="/" replace /> : <Login />} 
+              />
+              <Route 
+                path="/register" 
+                element={checkIsAuthenticated() ? <Navigate to="/" replace /> : <Register />} 
+              />
               
-              <Route element={<ProtectedLayout />}>
+              <Route element={<MainLayout />}>
                 <Route path="/" element={<HomePage />} />
+              </Route>
+
+              <Route element={<ProtectedLayout />}>
                 <Route path="/cart" element={<CartPage />} />
+              </Route>
+
+              <Route element={<AdminLayout />}>
                 <Route path="/bills" element={<BillPage />} />
                 <Route path="/statistics" element={<StatisticPage />} />
                 <Route path="/products" element={<ProductPage />} />

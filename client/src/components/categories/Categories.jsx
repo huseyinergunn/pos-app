@@ -13,7 +13,7 @@ const Categories = ({ categories, setCategories }) => {
   
   const user = JSON.parse(localStorage.getItem("posUser"));
   const isAdmin = user?.role === "admin";
-
+const safeCategories = Array.isArray(categories) ? categories : [];
   return (
     <div className="w-full flex flex-col gap-4 md:gap-6 bg-white dark:bg-slate-900/40 backdrop-blur-2xl p-4 md:p-6 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 shadow-xl shadow-slate-200/40 dark:shadow-none transition-all duration-300 h-auto md:max-h-[calc(100vh-220px)] overflow-hidden lg:overflow-visible">
       
@@ -41,7 +41,7 @@ const Categories = ({ categories, setCategories }) => {
         )}
       </div>
 
-      <nav className="flex-1 overflow-x-auto md:overflow-y-auto no-scrollbar -mx-4 md:mx-0 px-4 md:px-0 min-h-0"> 
+     <nav className="flex-1 overflow-x-auto md:overflow-y-auto no-scrollbar -mx-4 md:mx-0 px-4 md:px-0 min-h-0"> 
         <ul className="flex flex-row md:flex-col gap-3 md:gap-4 py-2"> 
           <CategoryItem 
             title="Tümü" 
@@ -50,7 +50,7 @@ const Categories = ({ categories, setCategories }) => {
             icon={<AppstoreOutlined />}
           />
 
-          {categories?.map((item) => (
+          {safeCategories.map((item) => (
             <CategoryItem 
               key={item._id}
               title={item.title} 
@@ -64,8 +64,8 @@ const Categories = ({ categories, setCategories }) => {
 
       {isAdmin && (
         <>
-          <Add isAddModalOpen={isAddModalOpen} setIsAddModalOpen={setIsAddModalOpen} categories={categories} setCategories={setCategories} />
-          <Edit isEditModalOpen={isEditModalOpen} setIsEditModalOpen={setIsEditModalOpen} categories={categories} setCategories={setCategories} />
+          <Add isAddModalOpen={isAddModalOpen} setIsAddModalOpen={setIsAddModalOpen} categories={safeCategories} setCategories={setCategories} />
+          <Edit isEditModalOpen={isEditModalOpen} setIsEditModalOpen={setIsEditModalOpen} categories={safeCategories} setCategories={setCategories} />
         </>
       )}
     </div>

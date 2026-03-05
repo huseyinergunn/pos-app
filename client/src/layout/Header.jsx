@@ -128,11 +128,7 @@ const Header = ({ isVisible: propIsVisible }) => {
               <button 
                 onClick={() => {
                   setDark(!dark);
-                  message.info({
-                    content: `Görünüm modu ${!dark ? 'Gece' : 'Gündüz'} olarak değiştirildi.`,
-                    key: 'theme_change', 
-                    duration: 1.5
-                  });
+                  message.info({ content: `Görünüm modu ${!dark ? 'Gece' : 'Gündüz'} olarak değiştirildi.`, key: 'theme_change', duration: 1.5 });
                 }} 
                 className="p-2 text-slate-500 bg-white/60 dark:bg-slate-800/40 rounded-lg border border-white/10 hover:bg-blue-500 hover:text-white dark:hover:bg-blue-600 transition-all duration-300"
               >
@@ -140,25 +136,14 @@ const Header = ({ isVisible: propIsVisible }) => {
               </button>
 
               {isPrivilegedUser ? (
-                <Popconfirm 
-                  title="Çıkış yapılsın mı?" 
-                  description="Mevcut oturumunuz sonlandırılacaktır."
-                  onConfirm={handleLogout} 
-                  okText="Evet" 
-                  cancelText="Hayır" 
-                  centered
-                >
+                <Popconfirm title="Çıkış yapılsın mı?" description="Mevcut oturumunuz sonlandırılacaktır." onConfirm={handleLogout} okText="Evet" cancelText="Hayır" centered>
                   <button type="button" className="p-2 text-red-500 bg-red-50/50 dark:bg-red-900/20 rounded-lg border border-red-500/10 hover:bg-red-500 hover:text-white transition-all duration-300">
                     <LogOut size={15} />
                   </button>
                 </Popconfirm>
               ) : (
-                <button 
-                  onClick={() => navigate("/login")}
-                  className="p-2 text-blue-600 bg-blue-50/50 dark:bg-blue-900/20 rounded-lg border border-blue-500/10 hover:bg-blue-600 hover:text-white transition-all duration-300 flex items-center gap-2"
-                >
-                  <LogIn size={15} />
-                  <span className="hidden md:block text-[10px] font-black uppercase tracking-widest">GİRİŞ YAP</span>
+                <button onClick={() => navigate("/login")} className="p-2 text-blue-600 bg-blue-50/50 dark:bg-blue-900/20 rounded-lg border border-blue-500/10 hover:bg-blue-600 hover:text-white transition-all duration-300 flex items-center gap-2">
+                  <LogIn size={15} /><span className="hidden md:block text-[10px] font-black uppercase tracking-widest">GİRİŞ YAP</span>
                 </button>
               )}
             </div>
@@ -173,9 +158,7 @@ const Header = ({ isVisible: propIsVisible }) => {
                     <Badge count={cartItems.length} size="small" offset={[5, -5]} color="#ef4444">
                       <Icon size={16} strokeWidth={2.5} className={isActive ? "text-white" : "text-slate-500"} />
                     </Badge>
-                  ) : (
-                    <Icon size={16} strokeWidth={2.5} />
-                  )}
+                  ) : ( <Icon size={16} strokeWidth={2.5} /> )}
                   <span className={isActive ? "block" : "hidden sm:block"}>{item.label}</span>
                 </Link>
               );
@@ -184,10 +167,11 @@ const Header = ({ isVisible: propIsVisible }) => {
         </div>
       </header>
       
+      {/* MOBİL ALT BAR - GÜNCELLENMİŞ HİZA */}
       <div className={`md:hidden fixed bottom-0 left-0 right-0 z-[1001] bg-white/90 dark:bg-slate-950/95 backdrop-blur-2xl border-t border-slate-100 dark:border-slate-800 px-6 py-2 pb-2 flex items-center justify-between shadow-[0_-10px_40px_rgba(0,0,0,0.1)] transition-transform duration-500 ease-in-out ${
         isTemporaryShow 
           ? "translate-y-0" 
-          : (isVisible ? "translate-y-0" : "translate-y-[110%]")
+          : (!isVisible ? "translate-y-0" : "translate-y-[110%]")
       }`}>
         <Link to="/" className={`flex flex-col items-center gap-1 ${location.pathname === "/" ? "text-blue-600" : "text-slate-400"}`}>
           <LayoutDashboard size={20} /><span className="text-[9px] font-black uppercase">Panel</span>
@@ -195,13 +179,17 @@ const Header = ({ isVisible: propIsVisible }) => {
         <Link to="/products" className={`flex flex-col items-center gap-1 ${location.pathname === "/products" ? "text-blue-600" : "text-slate-400"}`}>
           <Package size={20} /><span className="text-[9px] font-black uppercase tracking-tighter">Ürünler</span>
         </Link>
-        <div className={`relative -mt-10 flex items-center justify-center transition-transform duration-300 ${isBouncing ? "scale-110" : "scale-100"}`}> 
+        
+        {/* Sepet Butonu - mt-0 yapıldı, hizalandı */}
+        <div className={`relative flex items-center justify-center transition-transform duration-300 ${isBouncing ? "scale-110" : "scale-100"}`}> 
           <Badge count={cartItems.length} color="#ef4444" offset={[-2, 2]}>
-            <button type="button" onClick={() => setIsCartOpen(true)} className={`w-14 h-14 bg-blue-600 text-white rounded-[1.8rem] shadow-2xl flex flex-col items-center justify-center border-4 border-white dark:border-slate-950 active:scale-90 transition-all ${isBouncing ? "animate-bounce" : ""}`}>
-              <ShoppingCart size={22} color="white" /><span className="text-[8px] font-black mt-0.5">{total.toLocaleString("tr-TR")}₺</span>
+            <button type="button" onClick={() => setIsCartOpen(true)} className={`w-12 h-12 bg-blue-600 text-white rounded-xl shadow-lg flex flex-col items-center justify-center active:scale-90 transition-all ${isBouncing ? "animate-bounce" : ""}`}>
+              <ShoppingCart size={20} color="white" />
+              <span className="text-[7px] font-black mt-0.5">{total.toLocaleString("tr-TR")}₺</span>
             </button>
           </Badge>
         </div>
+
         <Link to="/bills" className={`flex flex-col items-center gap-1 ${location.pathname === "/bills" ? "text-blue-600" : "text-slate-400"}`}>
           <FileText size={20} /><span className="text-[9px] font-black uppercase">Fatura</span>
         </Link>
@@ -213,7 +201,7 @@ const Header = ({ isVisible: propIsVisible }) => {
       <Drawer title={null} closable={false} onClose={() => setIsCartOpen(false)} open={isCartOpen} placement="bottom" height="85%" styles={{ body: { padding: 0 }, wrapper: { borderRadius: "2.5rem 2.5rem 0 0" } }}>
         <CartTotals onClose={() => setIsCartOpen(false)} />
       </Drawer>
-      <div className="h-[90px] md:h-[135px] w-full shrink-0" />
+      <div className="h-[70px] md:h-[135px] w-full shrink-0" />
     </>
   );
 };

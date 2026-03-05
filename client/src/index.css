@@ -16,6 +16,7 @@ html, body {
   height: 100%;
 }
 
+/* Üst Header için kayma fixi */
 header {
   left: 0 !important;
   right: 0 !important;
@@ -23,20 +24,17 @@ header {
   padding-right: calc(100vw - 100%) !important; 
 }
 
+/* Mobil Alt Bar Geçişi */
 div.fixed.bottom-0.md\:hidden {
-  transition: transform 0.5s ease-in-out !important;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-div.fixed.bottom-0.md\:hidden div.-mt-10 {
-  margin-top: 0px !important; 
-}
-
+/* Alt bar elemanlarının düzgün durması için CSS zorlamalarını kaldırdık */
 div.fixed.bottom-0.md\:hidden button {
-  border-radius: 1rem !important;
-  height: 50px !important;
-  width: 50px !important;
+  border-radius: 1.8rem;
 }
 
+/* Sepet Animasyonları */
 @keyframes bounce-cart {
   0% { transform: scale(1); }
   50% { transform: scale(1.2) rotate(5deg); }
@@ -44,16 +42,18 @@ div.fixed.bottom-0.md\:hidden button {
 }
 
 .cart-bounce {
-  animation: bounce-cart 0.5s ease-in-out !important;
+  animation: bounce-cart 0.5s ease-in-out;
 }
 
+/* Spacer */
 .h-\[90px\].md\:h-\[135px\] {
-  height: 90px !important;
+  height: 90px;
 }
 
+/* Temel Form & Focus Reset */
 *:focus, *:focus-visible {
-  outline: none !important;
-  box-shadow: none !important;
+  outline: none;
+  box-shadow: none;
 }
 
 select, input {
@@ -62,6 +62,7 @@ select, input {
   appearance: none;
 }
 
+/* Ant Design Table Dark Mode Fix */
 .dark .ant-table {
   background: transparent !important;
 }

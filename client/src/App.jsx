@@ -36,11 +36,11 @@ function App() {
     document.documentElement.classList.contains("dark") || localStorage.getItem("theme") === "dark"
   );
   
-  const [user, setUser] = useState(() => JSON.parse(localStorage.getItem("posUser")));
+  const [user, setUser] = useState(() => JSON.parse(sessionStorage.getItem("posUser")));
 
   useEffect(() => {
     const handleStorageChange = () => {
-      setUser(JSON.parse(localStorage.getItem("posUser")));
+      setUser(JSON.parse(sessionStorage.getItem("posUser")));
     };
     window.addEventListener('storage', handleStorageChange);
     
@@ -92,7 +92,8 @@ function App() {
       }}
     >
       <AntApp>
-<BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>          <Suspense fallback={<PageLoader />}>
+        <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+          <Suspense fallback={<PageLoader />}>
             <Routes>
               <Route 
                 path="/login" 

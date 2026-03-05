@@ -1,8 +1,10 @@
-import { CloseOutlined, PrinterOutlined, SafetyOutlined } from "@ant-design/icons";
+import { CloseOutlined, PrinterOutlined, SafetyOutlined, FilePdfOutlined } from "@ant-design/icons";
 import { useRef, useEffect } from "react";
 import { useReactToPrint } from "react-to-print";
 import { App } from "antd"; 
 import { TAX_RATE } from "../../config/appConfig";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 
 const PrintBill = ({ isModalOpen, setIsModalOpen, customer }) => {
   const componentRef = useRef(null);
@@ -19,6 +21,30 @@ const PrintBill = ({ isModalOpen, setIsModalOpen, customer }) => {
     documentTitle: `e-Fatura-${billNumber}`,
     onAfterPrint: () => message.success("Yazdırma işlemi başlatıldı."),
   });
+
+  const handleDownloadPDF = async () => {
+    const element = componentRef.current;
+    const canvas = await html2canvas(element, {
+      scale: 2,
+      useCORS: true,
+      logging: false,
+      backgroundColor: "#ffffff"
+    });
+    
+    const imgData = canvas.toDataURL("image/png");
+    const pdf = new jsPDF({
+      orientation: "portrait",
+      unit: "mm",
+      format: "a4"
+    });
+
+    const imgWidth = 210;
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    
+    pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+    pdf.save(`Fatura-${billNumber}.pdf`);
+    message.success("PDF başarıyla indirildi.");
+  };
 
   const formatCurrency = (val) => Number(val).toLocaleString("tr-TR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
@@ -129,40 +155,38 @@ const PrintBill = ({ isModalOpen, setIsModalOpen, customer }) => {
           </div>
         </div>
 
-        <div className="p-4 sm:p-6 border-t dark:border-slate-800 bg-white dark:bg-[#0f172a] flex gap-3 shrink-0 items-center">
+        <div className="p-4 sm:p-6 border-t dark:border-slate-800 bg-white dark:bg-[#0f172a] flex flex-col sm:flex-row gap-3 shrink-0 items-center">
           <button 
             onClick={() => setIsModalOpen(false)}
-            className="flex-1 h-14 rounded-2xl font-bold text-slate-500 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 transition-all uppercase text-[11px] tracking-widest"
+            className="w-full sm:flex-1 h-14 rounded-2xl font-bold text-slate-500 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 transition-all uppercase text-[11px] tracking-widest"
           >
             Vazgeç
           </button>
           <button 
+            onClick={handleDownloadPDF}
+            className="w-full sm:flex-1 h-14 rounded-2xl bg-emerald-600 text-white font-black shadow-lg shadow-emerald-500/20 hover:bg-emerald-700 transition-all uppercase text-[11px] tracking-widest flex items-center justify-center gap-2"
+          >
+            <FilePdfOutlined />
+            PDF İndir
+          </button>
+          <button 
             onClick={handlePrint}
-            className="flex-[2] h-14 rounded-2xl bg-blue-600 text-white font-black shadow-lg shadow-blue-500/20 hover:bg-blue-700 transition-all uppercase text-[11px] tracking-[0.2em] flex items-center justify-center gap-2"
+            className="w-full sm:flex-1 h-14 rounded-2xl bg-blue-600 text-white font-black shadow-lg shadow-blue-500/20 hover:bg-blue-700 transition-all uppercase text-[11px] tracking-widest flex items-center justify-center gap-2"
           >
             <PrinterOutlined />
-            Faturayı Yazdır
+            Yazdır
           </button>
         </div>
       </div>
 
       <style dangerouslySetInnerHTML={{ __html: `
         @media print {
-          @page { 
-            size: A4; 
-            margin: 0 !important; 
-          }
-          body { 
-            -webkit-print-color-adjust: exact; 
-            margin: 0 !important; 
-            padding: 0 !important;
-          }
-          /* Yazdırma anında modal ve arkaplanı gizle */
-          .fixed, .absolute { visibility: hidden !important; }
-          /* Sadece fatura içeriğini göster */
+          @page { size: A4; margin: 0 !important; }
+          body { -webkit-print-color-adjust: exact; margin: 0 !important; padding: 0 !important; }
+          .fixed, .absolute, .p-4.sm\\:p-6 { display: none !important; }
           .bill-content { 
             visibility: visible !important;
-            position: fixed !important; 
+            position: absolute !important; 
             left: 0 !important; 
             top: 0 !important;
             width: 210mm !important;
@@ -171,20 +195,11 @@ const PrintBill = ({ isModalOpen, setIsModalOpen, customer }) => {
             padding: 15mm !important;
             box-shadow: none !important;
             border: none !important;
-            z-index: 9999 !important;
           }
-          .bill-content * { visibility: visible !important; }
         }
-
-        /* Köşe Sorunu Çözümü (Görselde işaretlediğin yer) */
-        .ant-modal-content, .relative.rounded-[2.5rem] {
-          overflow: hidden !important; /* Bu satır köşelerin dışarı taşmasını engeller */
-        }
-
         .custom-scrollbar::-webkit-scrollbar { width: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
       `}} />
     </div>
   );

@@ -22,11 +22,12 @@ const Header = ({ isVisible: propIsVisible }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const cartItems = useSelector((state) => state.cart.cartItems);
-  const userStr = localStorage.getItem("posUser");
+  const userStr = sessionStorage.getItem("posUser");
   const user = userStr ? JSON.parse(userStr) : null;
   const total = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
   const isHomePage = location.pathname === "/";
-
+  const [isTemporaryShow, setIsTemporaryShow] = useState(false);
+  const [isBouncing, setIsBouncing] = useState(false);
   const isPrivilegedUser = user && (user.role === "admin" || user.role === "staff");
 
   const getRoleConfig = (role) => {
@@ -62,8 +63,27 @@ const Header = ({ isVisible: propIsVisible }) => {
     }
   }, [dark]);
 
+  useEffect(() => {
+    if (cartItems.length > 0) {
+      const showTimer = setTimeout(() => {
+        setIsTemporaryShow(true);
+        setIsBouncing(true);
+      }, 0);
+
+      const hideTimer = setTimeout(() => {
+        setIsTemporaryShow(false);
+        setIsBouncing(false);
+      }, 2000);
+
+      return () => {
+        clearTimeout(showTimer);
+        clearTimeout(hideTimer);
+      };
+    }
+  }, [cartItems.length]);
+
   const handleLogout = () => {
-    localStorage.removeItem("posUser");
+    sessionStorage.removeItem("posUser");
     dispatch(reset()); 
     message.success({ content: "Başarıyla çıkış yapıldı.", duration: 1 });
     window.dispatchEvent(new Event("storage")); 
@@ -80,7 +100,7 @@ const Header = ({ isVisible: propIsVisible }) => {
 
   return (
     <>
-      <header className={`fixed top-0 left-0 right-0 z-[1000] w-full transition-transform duration-500 ease-in-out bg-white/40 dark:bg-slate-900/30 backdrop-blur-xl border-b border-white/20 dark:border-white/5 shadow-lg transform-gpu ${isVisible ? "translate-y-0" : "-translate-y-full"}`}>
+      <header className={`fixed top-0 left-0 right-0 z-[1000] transition-transform duration-500 ease-in-out bg-white/40 dark:bg-slate-900/30 backdrop-blur-xl border-b border-white/20 dark:border-white/5 shadow-lg transform-gpu ${isVisible ? "translate-y-0" : "-translate-y-full"}`}>
         <div className="max-w-[1400px] mx-auto flex flex-col items-center px-4 py-2 md:py-3 gap-3">
           <div className="flex items-center justify-between w-full gap-4 h-10 md:h-12">
             <div className="flex items-center gap-2 md:gap-4 shrink-0">
@@ -164,16 +184,20 @@ const Header = ({ isVisible: propIsVisible }) => {
         </div>
       </header>
       
-      <div className={`md:hidden fixed bottom-0 left-0 right-0 z-[1001] bg-white/90 dark:bg-slate-950/95 backdrop-blur-2xl border-t border-slate-100 dark:border-slate-800 px-6 py-2 pb-2 flex items-center justify-between shadow-[0_-10px_40px_rgba(0,0,0,0.1)] transition-transform duration-500 ease-in-out ${isVisible ? "translate-y-0" : "translate-y-[110%]"}`}>
+      <div className={`md:hidden fixed bottom-0 left-0 right-0 z-[1001] bg-white/90 dark:bg-slate-950/95 backdrop-blur-2xl border-t border-slate-100 dark:border-slate-800 px-6 py-2 pb-2 flex items-center justify-between shadow-[0_-10px_40px_rgba(0,0,0,0.1)] transition-transform duration-500 ease-in-out ${
+        isTemporaryShow 
+          ? "translate-y-0" 
+          : (isVisible ? "translate-y-0" : "translate-y-[110%]")
+      }`}>
         <Link to="/" className={`flex flex-col items-center gap-1 ${location.pathname === "/" ? "text-blue-600" : "text-slate-400"}`}>
           <LayoutDashboard size={20} /><span className="text-[9px] font-black uppercase">Panel</span>
         </Link>
         <Link to="/products" className={`flex flex-col items-center gap-1 ${location.pathname === "/products" ? "text-blue-600" : "text-slate-400"}`}>
           <Package size={20} /><span className="text-[9px] font-black uppercase tracking-tighter">Ürünler</span>
         </Link>
-        <div className="relative -mt-10 flex items-center justify-center"> 
+        <div className={`relative -mt-10 flex items-center justify-center transition-transform duration-300 ${isBouncing ? "scale-110" : "scale-100"}`}> 
           <Badge count={cartItems.length} color="#ef4444" offset={[-2, 2]}>
-            <button type="button" onClick={() => setIsCartOpen(true)} className="w-14 h-14 bg-blue-600 text-white rounded-[1.8rem] shadow-2xl flex flex-col items-center justify-center border-4 border-white dark:border-slate-950 active:scale-90 transition-transform">
+            <button type="button" onClick={() => setIsCartOpen(true)} className={`w-14 h-14 bg-blue-600 text-white rounded-[1.8rem] shadow-2xl flex flex-col items-center justify-center border-4 border-white dark:border-slate-950 active:scale-90 transition-all ${isBouncing ? "animate-bounce" : ""}`}>
               <ShoppingCart size={22} color="white" /><span className="text-[8px] font-black mt-0.5">{total.toLocaleString("tr-TR")}₺</span>
             </button>
           </Badge>

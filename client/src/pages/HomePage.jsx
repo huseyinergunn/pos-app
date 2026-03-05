@@ -156,13 +156,39 @@ const HomePage = () => {
         )}
       </div>
 
-      <style dangerouslySetInnerHTML={{ __html: `
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        .ant-badge-count { z-index: 10; border: none !important; box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important; }
-        .ant-pagination { display: flex !important; flex-wrap: wrap; justify-content: center; gap: 4px; }
-        .ant-pagination-item { border-radius: 50% !important; min-width: 32px !important; height: 32px !important; line-height: 32px !important; background: rgba(255,255,255,0.05) !important; border: 1px solid rgba(255,255,255,0.1) !important; }
-      `}} />
+     <style dangerouslySetInnerHTML={{ __html: `
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .ant-badge-count { z-index: 10; border: none !important; box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important; }
+    
+    /* Pagination Düzenlemesi */
+    .ant-pagination { 
+      display: flex !important; 
+      justify-content: center !important; 
+      align-items: center !important;
+      flex-wrap: nowrap !important; /* Aşağı kaymayı engeller */
+      gap: 2px !important;
+      overflow-x: auto !important; /* Çok fazla sayfa varsa yatayda kaydırır */
+      padding: 10px 0 !important;
+    }
+
+    .ant-pagination-item, .ant-pagination-prev, .ant-pagination-next, .ant-pagination-jump-prev, .ant-pagination-jump-next { 
+      border-radius: 50% !important; 
+      min-width: 28px !important; 
+      height: 28px !important; 
+      line-height: 28px !important; 
+      background: rgba(255,255,255,0.05) !important; 
+      border: 1px solid rgba(255,255,255,0.1) !important; 
+      margin: 0 !important;
+      flex-shrink: 0 !important;
+    }
+
+    @media (max-width: 640px) {
+      .ant-pagination {
+        transform: scale(0.9);
+      }
+    }
+  `}} />
     </ConfigProvider>
   );
 };

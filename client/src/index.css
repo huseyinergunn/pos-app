@@ -3,14 +3,52 @@
 @tailwind components;
 @tailwind utilities;
 
-html, body, #root {
-  height: 100%;
+html, body {
   margin: 0;
   padding: 0;
-  max-width: 100vw;
-  overflow-x: hidden;
+  width: 100%;
+  overflow-x: clip; 
   font-family: "Ubuntu", sans-serif;
   @apply bg-gray-50;
+}
+
+#root {
+  height: 100%;
+}
+
+header {
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  padding-right: calc(100vw - 100%) !important; 
+}
+
+div.fixed.bottom-0.md\:hidden {
+  transition: transform 0.5s ease-in-out !important;
+}
+
+div.fixed.bottom-0.md\:hidden div.-mt-10 {
+  margin-top: 0px !important; 
+}
+
+div.fixed.bottom-0.md\:hidden button {
+  border-radius: 1rem !important;
+  height: 50px !important;
+  width: 50px !important;
+}
+
+@keyframes bounce-cart {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2) rotate(5deg); }
+  100% { transform: scale(1); }
+}
+
+.cart-bounce {
+  animation: bounce-cart 0.5s ease-in-out !important;
+}
+
+.h-\[90px\].md\:h-\[135px\] {
+  height: 90px !important;
 }
 
 *:focus, *:focus-visible {

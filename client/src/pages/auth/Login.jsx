@@ -16,7 +16,7 @@ const Login = () => {
   );
 
   useEffect(() => {
-    const userStr = localStorage.getItem("posUser");
+    const userStr = sessionStorage.getItem("posUser");
     if (userStr) {
       const user = JSON.parse(userStr);
       if (user && user.token) {
@@ -52,7 +52,7 @@ const Login = () => {
       if (res.ok) {
         dispatch(reset()); 
         
-        localStorage.setItem(
+        sessionStorage.setItem(
           "posUser",
           JSON.stringify({
             username: user.username,
@@ -84,13 +84,13 @@ const Login = () => {
   const handleGuestEntry = () => {
     dispatch(reset()); 
     
-    localStorage.removeItem("posUser");
+    sessionStorage.removeItem("posUser");
     const guestUser = {
       username: "Misafir",
       role: "guest",
       email: "guest@nexpos.com",
     };
-    localStorage.setItem("posUser", JSON.stringify(guestUser));
+    sessionStorage.setItem("posUser", JSON.stringify(guestUser));
     message.info({
       content: "Misafir olarak giriş yapıldı.",
       key: "guest-login",

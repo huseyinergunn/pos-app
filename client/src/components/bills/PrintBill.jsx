@@ -3,7 +3,7 @@ import { useRef, useEffect } from "react";
 import { useReactToPrint } from "react-to-print";
 import { App } from "antd"; 
 import { TAX_RATE } from "../../config/appConfig";
-import jsPDF from "jspdf";
+import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
 
 const PrintBill = ({ isModalOpen, setIsModalOpen, customer }) => {

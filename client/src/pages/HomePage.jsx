@@ -96,7 +96,7 @@ const HomePage = () => {
           </div>
 
           {isAdmin && (
-            <Button size="large" onClick={() => setIsStatsModalVisible(true)} className="group hidden md:flex h-14 px-6 rounded-[1.8rem] border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900/60 shadow-xl shadow-blue-500/5 hover:shadow-blue-500/10 transition-all duration-300 items-center gap-3">
+            <Button size="large" onClick={() => setIsStatsModalVisible(true)} className="group flex h-14 px-6 rounded-[1.8rem] border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900/60 shadow-xl shadow-blue-500/5 hover:shadow-blue-500/10 transition-all duration-300 items-center gap-3">
               <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 text-white flex items-center justify-center shadow-lg shadow-blue-500/20 group-hover:scale-110 group-hover:rotate-3 transition-transform"><BarChartOutlined className="text-sm" /></div>
               <span className="font-black text-slate-700 dark:text-slate-200 uppercase tracking-[0.2em] text-[11px]">Analiz</span>
             </Button>
@@ -128,25 +128,29 @@ const HomePage = () => {
 
         {isStatsModalVisible && isAdmin && (
           <div className="fixed inset-0 z-[2000] flex items-center justify-center p-4">
-            <div className="absolute inset-0 bg-slate-900/80 backdrop-blur-xl" onClick={() => setIsStatsModalVisible(false)} />
-            <div className="relative w-full max-w-6xl max-h-[92vh] bg-white dark:bg-slate-950 rounded-[3.5rem] flex flex-col shadow-2xl border border-slate-100 dark:border-slate-800 overflow-hidden">
-              <div className="p-8 md:p-12 pb-6 flex flex-col md:flex-row justify-between items-center gap-6 shrink-0">
-                <div className="flex items-center gap-5">
-                  <div className="w-14 h-14 rounded-3xl bg-blue-600/10 text-blue-600 flex items-center justify-center"><BarChartOutlined className="text-2xl" /></div>
-                  <h2 className="text-3xl font-black text-slate-900 dark:text-white uppercase tracking-tighter leading-none">İşletme Raporu</h2>
-                </div>
+            <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-md transition-opacity" onClick={() => setIsStatsModalVisible(false)} />
+            <div className="relative w-full max-w-6xl bg-white dark:bg-slate-950 rounded-[2.5rem] md:rounded-[3.5rem] flex flex-col shadow-2xl border border-slate-100 dark:border-slate-800 overflow-hidden animate-in zoom-in-95 duration-300">
+              <div className="p-6 md:p-12 pb-4 flex flex-row justify-between items-center gap-6 shrink-0">
                 <div className="flex items-center gap-4">
-                  <div className="flex bg-slate-100 dark:bg-slate-900 p-1.5 rounded-[1.5rem]">
-                    {["daily", "weekly", "monthly"].map((f) => (
-                      <button key={f} onClick={() => setStatsFilter(f)} className={`px-6 py-2 rounded-[1.2rem] text-[10px] font-black uppercase tracking-widest ${statsFilter === f ? "bg-white dark:bg-slate-800 text-blue-600 shadow-md" : "text-slate-400 hover:text-slate-600"}`}>
-                        {f === "daily" ? "GÜNLÜK" : f === "weekly" ? "HAFTALIK" : "AYLIK"}
-                      </button>
-                    ))}
-                  </div>
-                  <button onClick={() => setIsStatsModalVisible(false)} className="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-slate-900 text-slate-400 flex items-center justify-center hover:bg-red-50 hover:text-red-500 transition-all"><CloseOutlined /></button>
+                  <div className="w-10 h-10 md:w-14 md:h-14 rounded-2xl md:rounded-3xl bg-blue-600/10 text-blue-600 flex items-center justify-center"><BarChartOutlined className="text-xl md:text-2xl" /></div>
+                  <h2 className="text-xl md:text-3xl font-black text-slate-900 dark:text-white uppercase tracking-tighter leading-none">İşletme Raporu</h2>
+                </div>
+                <button onClick={() => setIsStatsModalVisible(false)} className="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-slate-100 dark:bg-slate-900 text-slate-400 flex items-center justify-center hover:bg-red-50 hover:text-red-500 transition-all"><CloseOutlined /></button>
+              </div>
+
+              <div className="px-6 md:px-12 mb-6 overflow-x-auto no-scrollbar shrink-0">
+                <div className="flex bg-slate-100 dark:bg-slate-900 p-1.5 rounded-[1.5rem] w-fit">
+                  {["daily", "weekly", "monthly"].map((f) => (
+                    <button key={f} onClick={() => setStatsFilter(f)} className={`px-5 md:px-8 py-2 md:py-3 rounded-[1.2rem] text-[9px] md:text-[10px] font-black uppercase tracking-widest whitespace-nowrap transition-all ${statsFilter === f ? "bg-white dark:bg-slate-800 text-blue-600 shadow-md" : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"}`}>
+                      {f === "daily" ? "GÜNLÜK" : f === "weekly" ? "HAFTALIK" : "AYLIK"}
+                    </button>
+                  ))}
                 </div>
               </div>
-              <div className="flex-1 p-8 md:p-12 pt-0 overflow-y-auto no-scrollbar"><DashboardCarts filterType={statsFilter} /></div>
+
+              <div className="flex-1 p-6 md:p-12 pt-0 overflow-y-auto no-scrollbar pb-8 md:pb-12">
+                <DashboardCarts filterType={statsFilter} />
+              </div>
             </div>
           </div>
         )}

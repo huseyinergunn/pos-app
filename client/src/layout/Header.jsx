@@ -2,9 +2,9 @@ import { useEffect, useState, useCallback } from "react";
 import { 
   Moon, Sun, LayoutDashboard, ShoppingCart, 
   Package, FileText, BarChart3, Search, LogOut, 
-  ShieldCheck, UserCircle, HardDrive
+  ShieldCheck, UserCircle, HardDrive, LogIn
 } from "lucide-react";
-import { App, Badge, Popconfirm, Button, Drawer } from "antd"; 
+import { App, Badge, Popconfirm, Drawer } from "antd"; 
 import { useSelector, useDispatch } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { setSearch } from "../redux/slices/productSlice";
@@ -26,6 +26,8 @@ const Header = ({ isVisible: propIsVisible }) => {
   const user = userStr ? JSON.parse(userStr) : null;
   const total = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
   const isHomePage = location.pathname === "/";
+
+  const isPrivilegedUser = user && (user.role === "admin" || user.role === "staff");
 
   const getRoleConfig = (role) => {
     const r = role?.toLowerCase();
@@ -60,20 +62,14 @@ const Header = ({ isVisible: propIsVisible }) => {
     }
   }, [dark]);
 
-const handleLogout = () => {
-  localStorage.removeItem("posUser");
-  dispatch(reset()); 
-  
-  message.success({
-    content: "Başarıyla çıkış yapıldı.",
-    duration: 1
-  });
+  const handleLogout = () => {
+    localStorage.removeItem("posUser");
+    dispatch(reset()); 
+    message.success({ content: "Başarıyla çıkış yapıldı.", duration: 1 });
+    window.dispatchEvent(new Event("storage")); 
+    navigate("/login", { replace: true });
+  };
 
-  // Sayfayı yenilemek yerine manuel bir event gönderiyoruz ki App.jsx'teki state anında güncellensin
-  window.dispatchEvent(new Event("storage")); 
-  
-  navigate("/login", { replace: true });
-};
   const navItems = [
     { path: "/", icon: LayoutDashboard, label: "Panel" },
     { path: "/cart", icon: ShoppingCart, label: "Sepetim" },
@@ -122,7 +118,8 @@ const handleLogout = () => {
               >
                 {dark ? <Sun size={15} /> : <Moon size={15} />}
               </button>
-              {user ? (
+
+              {isPrivilegedUser ? (
                 <Popconfirm 
                   title="Çıkış yapılsın mı?" 
                   description="Mevcut oturumunuz sonlandırılacaktır."
@@ -136,7 +133,13 @@ const handleLogout = () => {
                   </button>
                 </Popconfirm>
               ) : (
-                <Button type="primary" size="small" onClick={() => navigate("/login")} className="bg-blue-600 font-bold rounded-lg text-[10px] md:text-[12px] h-8 md:h-9 border-none uppercase tracking-widest">GİRİŞ YAP</Button>
+                <button 
+                  onClick={() => navigate("/login")}
+                  className="p-2 text-blue-600 bg-blue-50/50 dark:bg-blue-900/20 rounded-lg border border-blue-500/10 hover:bg-blue-600 hover:text-white transition-all duration-300 flex items-center gap-2"
+                >
+                  <LogIn size={15} />
+                  <span className="hidden md:block text-[10px] font-black uppercase tracking-widest">GİRİŞ YAP</span>
+                </button>
               )}
             </div>
           </div>

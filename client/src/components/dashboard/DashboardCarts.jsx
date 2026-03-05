@@ -82,28 +82,30 @@ const DashboardCarts = ({ filterType = "daily" }) => {
     },
   ];
 
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full">
+ return (
+    <div className="grid grid-cols-2 md:grid-cols-2 gap-4 md:gap-8 w-full">
       {loading 
         ? [1, 2, 3, 4].map((i) => (
-            <div key={i} className="h-40 bg-slate-200/50 dark:bg-slate-800/50 animate-pulse rounded-[2.5rem]" />
+            <div key={i} className="h-32 md:h-44 bg-slate-200/50 dark:bg-slate-800/50 animate-pulse rounded-[2rem] md:rounded-[2.5rem]" />
           ))
         : stats.map((item, i) => (
             <div 
               key={i} 
-              className="group relative overflow-hidden bg-white/40 dark:bg-slate-900/40 backdrop-blur-md p-10 rounded-[2.5rem] border border-white/20 dark:border-slate-800/50 flex justify-between items-center transition-all duration-500 hover:shadow-2xl hover:-translate-y-1"
+              className="group relative overflow-hidden bg-white/40 dark:bg-slate-900/40 backdrop-blur-md p-5 pb-5 md:p-10 md:pb-10 rounded-[2rem] md:rounded-[2.5rem] border border-white/20 dark:border-slate-800/50 flex flex-col justify-between transition-all duration-500 hover:shadow-2xl hover:-translate-y-1"
             >
-              <div className="relative z-10">
-                <p className="text-[10px] font-black uppercase text-slate-400 dark:text-slate-500 tracking-[0.2em] mb-2">
-                  {item.title}
-                </p>
-                <h2 className="text-4xl font-black bg-clip-text text-transparent bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 dark:from-white dark:via-blue-100 dark:to-indigo-100 tracking-tighter">
-                  {item.value}
-                </h2>
+              <div className={`absolute top-4 right-4 md:top-8 md:right-8 p-2.5 md:p-5 rounded-xl md:rounded-2xl bg-gradient-to-br ${item.gradient} text-white shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 z-20`}>
+                <item.icon className="w-4 h-4 md:w-8 md:h-8" strokeWidth={2.5} />
               </div>
 
-              <div className={`p-5 rounded-2xl bg-gradient-to-br ${item.gradient} text-white shadow-xl group-hover:scale-110 group-hover:rotate-6 transition-all duration-500`}>
-                <item.icon size={32} strokeWidth={2.5} />
+              <div className={`absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br ${item.gradient} opacity-[0.03] dark:opacity-[0.08] rounded-full blur-3xl`} />
+
+              <div className="relative z-10 mt-auto pt-6 md:pt-10"> 
+                <p className="text-[7px] md:text-[10px] font-black uppercase text-slate-400 dark:text-slate-500 tracking-[0.15em] md:tracking-[0.2em] mb-1">
+                  {item.title}
+                </p>
+                <h2 className="text-lg md:text-4xl font-black bg-clip-text text-transparent bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 dark:from-white dark:via-blue-100 dark:to-indigo-100 tracking-tighter break-words">
+                  {item.value}
+                </h2>
               </div>
             </div>
           ))

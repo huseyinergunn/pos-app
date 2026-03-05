@@ -36,7 +36,6 @@ const PrintBill = ({ isModalOpen, setIsModalOpen, customer }) => {
     <div className="fixed inset-0 z-[3000] flex items-center justify-center p-2 sm:p-4 bg-black/80 backdrop-blur-md">
       <div className="absolute inset-0" onClick={() => setIsModalOpen(false)} />
 
-      {/* Ana Modal - Buradaki rounded-[2.5rem] ile overflow-hidden köşeleri düzeltir */}
       <div className="relative w-full max-w-[800px] bg-white dark:bg-[#0f172a] rounded-[2.5rem] shadow-2xl flex flex-col border border-slate-200 dark:border-slate-800 max-h-[85vh] z-10 overflow-hidden">
         
         <div className="flex items-center justify-between p-4 border-b dark:border-slate-800 bg-slate-50 dark:bg-slate-900 shrink-0">
@@ -53,7 +52,6 @@ const PrintBill = ({ isModalOpen, setIsModalOpen, customer }) => {
 
         <div className="flex-1 bg-slate-100 dark:bg-black/40 overflow-x-hidden overflow-y-auto p-4 flex justify-center custom-scrollbar">
           <div className="w-full flex justify-center pt-0 items-start pb-20">
-              {/* Ekran önizlemesi için ölçeklendirme */}
               <div className="print-container origin-top scale-[0.42] sm:scale-[0.6] md:scale-[0.7] lg:scale-[0.85] transition-all duration-300">
                 <section 
                   ref={componentRef} 

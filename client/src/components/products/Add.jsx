@@ -37,7 +37,7 @@ const Add = ({ isAddModalOpen, setIsAddModalOpen, categories = [], refreshData }
       onCancel={() => setIsAddModalOpen(false)}
       footer={null}
       centered
-      destroyOnClose={true} 
+      destroyOnHidden={true} 
       width={550}
       style={{ top: 20, padding: "10px" }} 
       className="modern-modal"

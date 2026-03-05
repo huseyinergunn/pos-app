@@ -13,7 +13,7 @@ const CartTotals = ({ onClose }) => {
   const taxDivider = 1 + TAX_RATE / 100;
   const subTotal = grandTotal / taxDivider;
   const taxAmount = grandTotal - subTotal;
-  const user = JSON.parse(localStorage.getItem("posUser"));
+  const user = JSON.parse(sessionStorage.getItem("posUser"));
   const isLoggedIn = Boolean(user?.token);
 
   const handleClear = () => {

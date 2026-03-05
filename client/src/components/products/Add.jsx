@@ -4,7 +4,7 @@ import API from "../../config/appConfig";
 
 const Add = ({ isAddModalOpen, setIsAddModalOpen, categories = [], refreshData }) => {
   const [form] = Form.useForm();
-  const user = JSON.parse(localStorage.getItem("posUser"));
+  const user = JSON.parse(sessionStorage.getItem("posUser"));
   const isAdmin = user?.role === "admin";
 
   const onFinish = async (values) => {

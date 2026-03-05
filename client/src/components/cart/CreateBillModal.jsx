@@ -29,7 +29,7 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, cartItems, total, taxAmo
 
   if (!isModalOpen) return null;
 
-  const user = JSON.parse(localStorage.getItem("posUser"));
+  const user = JSON.parse(sessionStorage.getItem("posUser"));
   const isLoggedIn = Boolean(user?.token);
 
   const handleCreateBill = async () => {

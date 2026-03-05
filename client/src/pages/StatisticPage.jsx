@@ -14,7 +14,7 @@ const StatisticPage = () => {
   const [filterType, setFilterType] = useState("all");
   const isDark = document.documentElement.classList.contains("dark");
 
-  const user = JSON.parse(localStorage.getItem("posUser"));
+  const user = JSON.parse(sessionStorage.getItem("posUser"));
   const isAdmin = user?.role === "admin" && user?.token;
 
   const fetchData = useCallback(async () => {

@@ -10,7 +10,7 @@ const CartPage = () => {
   const { cartItems, grandTotal, addItem, decreaseItem } = useCart();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem("posUser"));
+  const user = JSON.parse(sessionStorage.getItem("posUser"));
   const isAdminOrStaff = user?.role === "admin" || user?.role === "staff";
 
   const taxDivider = 1 + TAX_RATE / 100;

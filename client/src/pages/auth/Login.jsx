@@ -30,10 +30,10 @@ const Login = () => {
     setIsDark(newTheme);
     if (newTheme) {
       document.documentElement.classList.add("dark");
-      localStorage.setItem("theme", "dark");
+      sessionStorage.setItem("theme", "dark");
     } else {
       document.documentElement.classList.remove("dark");
-      localStorage.setItem("theme", "light");
+      sessionStorage.setItem("theme", "light");
     }
   };
 

@@ -33,7 +33,7 @@ function App() {
   const dispatch = useDispatch();
   
   const [isDarkMode, setIsDarkMode] = useState(() => 
-    document.documentElement.classList.contains("dark") || localStorage.getItem("theme") === "dark"
+    document.documentElement.classList.contains("dark") || sessionStorage.getItem("theme") === "dark"
   );
   
   const [user, setUser] = useState(() => JSON.parse(sessionStorage.getItem("posUser")));

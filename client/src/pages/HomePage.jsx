@@ -27,7 +27,7 @@ const HomePage = () => {
   const search = useSelector((state) => state.product.search);
   const cart = useSelector((state) => state.cart);
   const selectedCategory = useSelector((state) => state.product.category);
-  const user = JSON.parse(localStorage.getItem("posUser"));
+  const user = JSON.parse(sessionStorage.getItem("posUser"));
   const isAdmin = user?.role === "admin";
   const isDark = document.documentElement.classList.contains("dark");
 

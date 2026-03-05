@@ -11,7 +11,7 @@ const Categories = ({ categories, setCategories }) => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   
-  const user = JSON.parse(localStorage.getItem("posUser"));
+  const user = JSON.parse(sessionStorage.getItem("posUser"));
   const isAdmin = user?.role === "admin";
 const safeCategories = Array.isArray(categories) ? categories : [];
   return (

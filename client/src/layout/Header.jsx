@@ -13,7 +13,7 @@ import CartTotals from "../features/cart/CartTotals";
 
 const Header = ({ isVisible: propIsVisible }) => {
   const { message } = App.useApp(); 
-  const [dark, setDark] = useState(() => localStorage.getItem("theme") === "dark");
+  const [dark, setDark] = useState(() => sessionStorage.getItem("theme") === "dark");
   const [internalVisible, setInternalVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const isVisible = propIsVisible !== undefined ? propIsVisible : internalVisible;
@@ -56,10 +56,10 @@ const Header = ({ isVisible: propIsVisible }) => {
   useEffect(() => {
     if (dark) { 
       document.documentElement.classList.add("dark"); 
-      localStorage.setItem("theme", "dark"); 
+      sessionStorage.setItem("theme", "dark"); 
     } else { 
       document.documentElement.classList.remove("dark"); 
-      localStorage.setItem("theme", "light"); 
+      sessionStorage.setItem("theme", "light"); 
     }
   }, [dark]);
 

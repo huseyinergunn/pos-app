@@ -9,7 +9,7 @@ const Edit = ({ products, categories, refreshData, isAddModalOpen, setIsAddModal
   const [editingItem, setEditingItem] = useState({});
   const [form] = Form.useForm();
   
-  const user = JSON.parse(localStorage.getItem("posUser"));
+  const user = JSON.parse(sessionStorage.getItem("posUser"));
   const isAdmin = user?.role === "admin";
   
 

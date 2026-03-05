@@ -36,6 +36,7 @@ const PrintBill = ({ isModalOpen, setIsModalOpen, customer }) => {
     <div className="fixed inset-0 z-[3000] flex items-center justify-center p-2 sm:p-4 bg-black/80 backdrop-blur-md">
       <div className="absolute inset-0" onClick={() => setIsModalOpen(false)} />
 
+      {/* Ana Modal - Buradaki rounded-[2.5rem] ile overflow-hidden köşeleri düzeltir */}
       <div className="relative w-full max-w-[800px] bg-white dark:bg-[#0f172a] rounded-[2.5rem] shadow-2xl flex flex-col border border-slate-200 dark:border-slate-800 max-h-[85vh] z-10 overflow-hidden">
         
         <div className="flex items-center justify-between p-4 border-b dark:border-slate-800 bg-slate-50 dark:bg-slate-900 shrink-0">
@@ -50,14 +51,14 @@ const PrintBill = ({ isModalOpen, setIsModalOpen, customer }) => {
           </button>
         </div>
 
-        <div className="flex-1 bg-slate-100 dark:bg-black/40 overflow-x-hidden overflow-y-hidden md:overflow-y-auto p-4 flex justify-center custom-scrollbar">
-          
+        <div className="flex-1 bg-slate-100 dark:bg-black/40 overflow-x-hidden overflow-y-auto p-4 flex justify-center custom-scrollbar">
           <div className="w-full flex justify-center pt-0 items-start pb-20">
+              {/* Ekran önizlemesi için ölçeklendirme */}
               <div className="print-container origin-top scale-[0.42] sm:scale-[0.6] md:scale-[0.7] lg:scale-[0.85] transition-all duration-300">
                 <section 
                   ref={componentRef} 
-                  className="bg-white p-[15mm] shadow-2xl text-left text-black bill-content mx-auto" 
-                  style={{ width: '210mm', minHeight: 'auto' , height: 'fit-content', paddingBottom: '20mm' }}
+                  className="bg-white p-[15mm] text-left text-black bill-content mx-auto" 
+                  style={{ width: '210mm', minHeight: '297mm', height: 'fit-content' }}
                 >
                   <div className="flex justify-between items-start border-b-4 border-black pb-8">
                     <div className="space-y-0">
@@ -65,7 +66,7 @@ const PrintBill = ({ isModalOpen, setIsModalOpen, customer }) => {
                       <p className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Akıllı Satış ve Stok Yönetimi</p>
                     </div>
                     <div className="text-right">
-                      <h1 className="text-5xl font-light text-slate-100 tracking-[0.2em] uppercase leading-none">Fatura</h1>
+                      <h1 className="text-5xl font-light text-slate-200 tracking-[0.2em] uppercase leading-none">Fatura</h1>
                       <p className="font-mono font-bold text-xl mt-3 tracking-tighter">#INV-{billNumber}</p>
                     </div>
                   </div>
@@ -126,7 +127,7 @@ const PrintBill = ({ isModalOpen, setIsModalOpen, customer }) => {
                     </div>
                   </div>
                 </section>
-             </div>
+              </div>
           </div>
         </div>
 
@@ -149,15 +150,39 @@ const PrintBill = ({ isModalOpen, setIsModalOpen, customer }) => {
 
       <style dangerouslySetInnerHTML={{ __html: `
         @media print {
-          @page { size: A4; margin: 0mm !important; }
-          body * { visibility: hidden; }
-          .bill-content, .bill-content * { visibility: visible; }
-          .bill-content { 
-            position: absolute; left: 0; top: 0; 
-            width: 210mm !important; box-shadow: none !important;
-            margin: 0 !important;
+          @page { 
+            size: A4; 
+            margin: 0 !important; 
           }
+          body { 
+            -webkit-print-color-adjust: exact; 
+            margin: 0 !important; 
+            padding: 0 !important;
+          }
+          /* Yazdırma anında modal ve arkaplanı gizle */
+          .fixed, .absolute { visibility: hidden !important; }
+          /* Sadece fatura içeriğini göster */
+          .bill-content { 
+            visibility: visible !important;
+            position: fixed !important; 
+            left: 0 !important; 
+            top: 0 !important;
+            width: 210mm !important;
+            height: 297mm !important;
+            margin: 0 !important;
+            padding: 15mm !important;
+            box-shadow: none !important;
+            border: none !important;
+            z-index: 9999 !important;
+          }
+          .bill-content * { visibility: visible !important; }
         }
+
+        /* Köşe Sorunu Çözümü (Görselde işaretlediğin yer) */
+        .ant-modal-content, .relative.rounded-[2.5rem] {
+          overflow: hidden !important; /* Bu satır köşelerin dışarı taşmasını engeller */
+        }
+
         .custom-scrollbar::-webkit-scrollbar { width: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }

@@ -1,4 +1,4 @@
-import { ConfigProvider, theme, Button, Drawer, Badge } from "antd";
+import { ConfigProvider, theme, Button, Drawer, Badge, Input } from "antd";
 import { useEffect, useState, useMemo, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import API from "../config/appConfig";
@@ -10,9 +10,10 @@ import {
   BarChartOutlined, 
   HomeOutlined, 
   CloseOutlined,
-  ShoppingCartOutlined
+  ShoppingCartOutlined,
+  SearchOutlined
 } from "@ant-design/icons";
-import { setProducts as setReduxProducts } from "../redux/slices/productSlice";
+import { setProducts as setReduxProducts, setSearch } from "../redux/slices/productSlice";
 
 const HomePage = () => {
   const [categories, setCategories] = useState([]);
@@ -28,7 +29,6 @@ const HomePage = () => {
   const selectedCategory = useSelector((state) => state.product.category);
   const user = JSON.parse(localStorage.getItem("posUser"));
   const isAdmin = user?.role === "admin";
-
   const isDark = document.documentElement.classList.contains("dark");
 
   const fetchAll = useCallback(async () => {
@@ -54,76 +54,50 @@ const HomePage = () => {
 
   const filtered = useMemo(() => {
     if (!products || products.length === 0) return [];
-
     let result = products.filter((item) => {
       const title = item.title?.toLowerCase() || "";
       const matchesSearch = title.includes((search || "").toLowerCase());
-      
       if (!selectedCategory || selectedCategory === "Tümü") return matchesSearch;
-      
-      const productCategory = typeof item.category === "object" && item.category !== null 
-        ? item.category.title 
-        : item.category;
-        
+      const productCategory = typeof item.category === "object" && item.category !== null ? item.category.title : item.category;
       return matchesSearch && String(productCategory || "").localeCompare(selectedCategory, "tr", { sensitivity: "base" }) === 0;
     });
-
-    
-    if (sortOption === "price-asc") {
-      result.sort((a, b) => (a.price || 0) - (b.price || 0));
-    } else if (sortOption === "price-desc") {
-      result.sort((a, b) => (b.price || 0) - (a.price || 0));
-    } else if (sortOption === "alphabetical") {
-      result.sort((a, b) => (a.title || "").localeCompare(b.title || "", "tr"));
-    } else if (sortOption === "newest") {
-      result.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-    } else {
-     
-      result.sort((a, b) => {
+    if (sortOption === "price-asc") result.sort((a, b) => (a.price || 0) - (b.price || 0));
+    else if (sortOption === "price-desc") result.sort((a, b) => (b.price || 0) - (a.price || 0));
+    else if (sortOption === "alphabetical") result.sort((a, b) => (a.title || "").localeCompare(b.title || "", "tr"));
+    else if (sortOption === "newest") result.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    else result.sort((a, b) => {
         const hashA = a._id?.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) || 0;
         const hashB = b._id?.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) || 0;
         return (hashA % 10) - (hashB % 10) || a.title.localeCompare(b.title);
-      });
-    }
-
+    });
     return result;
   }, [products, search, selectedCategory, sortOption]);
 
   return (
-    <ConfigProvider 
-      theme={{ 
-        algorithm: isDark ? theme.darkAlgorithm : theme.defaultAlgorithm, 
-        token: { borderRadius: 20, colorPrimary: "#2563eb" } 
-      }}
-    >
+    <ConfigProvider theme={{ algorithm: isDark ? theme.darkAlgorithm : theme.defaultAlgorithm, token: { borderRadius: 20, colorPrimary: "#2563eb" } }}>
       <div className="flex flex-col min-h-screen bg-transparent transition-all relative pb-24 md:pb-0"> 
         <div className="p-4 md:px-10 md:pt-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shrink-0">
-          <div className="flex items-center gap-5">
-            <div className="bg-white dark:bg-slate-900 p-4 rounded-3xl shadow-xl shadow-blue-100/20 dark:shadow-none border border-slate-100 dark:border-slate-800">
-              <HomeOutlined className="text-blue-600 text-3xl" />
-            </div>
-            <div>
-              <h1 className="text-3xl font-black tracking-tighter text-slate-900 dark:text-white uppercase leading-none">
-                Satış Paneli
-              </h1>
-              <div className="flex items-center gap-2 mt-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                <span className="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em]">
-                  SİSTEM AKTİF • CANLI VERİ
-                </span>
+          <div className="flex flex-col md:flex-row md:items-center gap-5 w-full md:w-auto">
+            <div className="flex items-center gap-5">
+              <div className="bg-white dark:bg-slate-900 p-4 rounded-3xl shadow-xl shadow-blue-100/20 dark:shadow-none border border-slate-100 dark:border-slate-800">
+                <HomeOutlined className="text-blue-600 text-3xl" />
               </div>
+              <div>
+                <h1 className="text-3xl font-black tracking-tighter text-slate-900 dark:text-white uppercase leading-none">Satış Paneli</h1>
+                <div className="flex items-center gap-2 mt-2">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                  <span className="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em]">SİSTEM AKTİF • CANLI VERİ</span>
+                </div>
+              </div>
+            </div>
+            <div className="w-full md:hidden mt-2">
+              <Input size="large" placeholder="Ürünlerde ara..." prefix={<SearchOutlined className="text-blue-500" />} value={search} onChange={(e) => dispatch(setSearch(e.target.value))} className="h-14 rounded-2xl bg-white dark:bg-slate-900 border-slate-100 dark:border-slate-800 shadow-xl shadow-blue-500/5 text-slate-900 dark:text-white font-bold" />
             </div>
           </div>
 
           {isAdmin && (
-            <Button
-              size="large"
-              onClick={() => setIsStatsModalVisible(true)}
-              className="group hidden md:flex h-14 px-6 rounded-[1.8rem] border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900/60 shadow-xl shadow-blue-500/5 hover:shadow-blue-500/10 transition-all duration-300 items-center gap-3"
-            >
-              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 text-white flex items-center justify-center shadow-lg shadow-blue-500/20 group-hover:scale-110 group-hover:rotate-3 transition-transform">
-                <BarChartOutlined className="text-sm" />
-              </div>
+            <Button size="large" onClick={() => setIsStatsModalVisible(true)} className="group hidden md:flex h-14 px-6 rounded-[1.8rem] border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900/60 shadow-xl shadow-blue-500/5 hover:shadow-blue-500/10 transition-all duration-300 items-center gap-3">
+              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 text-white flex items-center justify-center shadow-lg shadow-blue-500/20 group-hover:scale-110 group-hover:rotate-3 transition-transform"><BarChartOutlined className="text-sm" /></div>
               <span className="font-black text-slate-700 dark:text-slate-200 uppercase tracking-[0.2em] text-[11px]">Analiz</span>
             </Button>
           )}
@@ -133,43 +107,22 @@ const HomePage = () => {
           <aside className="w-full lg:w-72 lg:sticky lg:top-36 z-20 shrink-0 self-start">
             <Categories categories={categories} setCategories={setCategories} />
           </aside>
-
           <main className="flex-1 w-full"> 
             {loading ? (
               <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
-                {[...Array(8)].map((_, i) => (
-                  <div key={i} className="animate-pulse bg-slate-100 dark:bg-slate-800 p-4 rounded-[2.5rem] h-64" />
-                ))}
+                {[...Array(8)].map((_, i) => <div key={i} className="animate-pulse bg-slate-100 dark:bg-slate-800 p-4 rounded-[2.5rem] h-64" />)}
               </div>
-            ) : (
-              <Products 
-                categories={categories} 
-                filtered={filtered} 
-                products={products} 
-                setProducts={setProducts} 
-                setSortOption={setSortOption} 
-                refreshData={fetchAll} 
-              />
-            )}
+            ) : <Products categories={categories} filtered={filtered} products={products} setProducts={setProducts} setSortOption={setSortOption} refreshData={fetchAll} />}
           </main>
         </div>
 
-        <button 
-          onClick={() => setIsCartOpen(true)}
-          className="hidden md:flex fixed bottom-10 right-10 w-20 h-20 bg-blue-600 hover:bg-blue-700 text-white rounded-full items-center justify-center shadow-[0_20px_50px_rgba(37,99,235,0.4)] transition-all hover:scale-110 active:scale-95 z-[100] group"
-        >
+        <button onClick={() => setIsCartOpen(true)} className="hidden md:flex fixed bottom-10 right-10 w-20 h-20 bg-blue-600 hover:bg-blue-700 text-white rounded-full items-center justify-center shadow-[0_20px_50px_rgba(37,99,235,0.4)] transition-all hover:scale-110 active:scale-95 z-[100] group">
           <Badge count={cart.cartItems.length} offset={[5, 0]} color="#ef4444">
-            <ShoppingCartOutlined className="text-3xl group-hover:rotate-12 transition-transform" />
+            <ShoppingCartOutlined className="text-3xl text-white group-hover:rotate-12 transition-transform" />
           </Badge>
         </button>
 
-        <Drawer
-          title={null} closable={false} onClose={() => setIsCartOpen(false)} open={isCartOpen}
-          placement={window.innerWidth > 768 ? "right" : "bottom"}
-          width={window.innerWidth > 768 ? 420 : "100%"}
-          height={window.innerWidth > 768 ? "100%" : "85%"}
-          styles={{ body: { padding: 0 }, wrapper: { borderRadius: window.innerWidth > 768 ? "0" : "2.5rem 2.5rem 0 0" } }}
-        >
+        <Drawer title={null} closable={false} onClose={() => setIsCartOpen(false)} open={isCartOpen} placement={window.innerWidth > 768 ? "right" : "bottom"} width={window.innerWidth > 768 ? 420 : "100%"} height={window.innerWidth > 768 ? "100%" : "85%"} styles={{ body: { padding: 0 }, wrapper: { borderRadius: window.innerWidth > 768 ? "0" : "2.5rem 2.5rem 0 0" } }}>
           <CartTotals onClose={() => setIsCartOpen(false)} />
         </Drawer>
 

@@ -81,14 +81,13 @@ const StatisticPage = () => {
   }, [filteredBills]);
 if (!isAdmin) {
   return (
-    <div className="h-[calc(100vh-140px)] flex flex-col items-center justify-start bg-transparent p-4 overflow-hidden pt-0">
-      
-      <div className="mt-0 w-full flex flex-col items-center">
+<div className="fixed inset-0 h-screen w-screen flex flex-col items-center justify-start bg-transparent p-4 overflow-hidden pt-0">      
+      <div className="mt-24 md:mt-48 w-full flex flex-col items-center">
         <Result
           status="403"
           icon={
             <div className="flex justify-center scale-75 md:scale-100">
-               <LockOutlined className="text-blue-500 text-6xl" />
+               <LockOutlined className="text-blue-500 text-6xl " />
             </div>
           }
           title={

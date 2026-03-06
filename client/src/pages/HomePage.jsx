@@ -28,6 +28,19 @@ const HomePage = () => {
   const cart = useSelector((state) => state.cart);
   const selectedCategory = useSelector((state) => state.product.category);
   const user = JSON.parse(sessionStorage.getItem("posUser"));
+
+  useEffect(() => {
+    if (!user) {
+      const defaultUser = {
+        username: "Misafir Müşteri",
+        role: "customer",
+        email: "guest@example.com"
+      };
+      sessionStorage.setItem("posUser", JSON.stringify(defaultUser));
+      window.location.reload();
+    }
+  }, [user]);
+
   const isAdmin = user?.role === "admin";
   const isDark = document.documentElement.classList.contains("dark");
 
@@ -76,15 +89,15 @@ const HomePage = () => {
   return (
     <ConfigProvider theme={{ algorithm: isDark ? theme.darkAlgorithm : theme.defaultAlgorithm, token: { borderRadius: 20, colorPrimary: "#2563eb" } }}>
       <div className="flex flex-col min-h-screen bg-transparent transition-all relative pb-24 md:pb-0"> 
-        <div className="p-4 md:px-10 md:pt-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shrink-0">
-          <div className="flex flex-col md:flex-row md:items-center gap-5 w-full md:w-auto">
+        <div className="p-0 md:px-10 pt-2 md:pt-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shrink-0">
+          <div className="flex flex-col md:flex-row md:items-center gap-5 w-full md:w-auto px-4 md:px-0">
             <div className="flex items-center gap-5">
-              <div className="bg-white dark:bg-slate-900 p-4 rounded-3xl shadow-xl shadow-blue-100/20 dark:shadow-none border border-slate-100 dark:border-slate-800">
-                <HomeOutlined className="text-blue-600 text-3xl" />
+              <div className="bg-white dark:bg-slate-900 p-3 md:p-4 rounded-2xl md:rounded-3xl shadow-xl shadow-blue-100/20 dark:shadow-none border border-slate-100 dark:border-slate-800">
+                <HomeOutlined className="text-blue-600 text-2xl md:text-3xl" />
               </div>
               <div>
-                <h1 className="text-3xl font-black tracking-tighter text-slate-900 dark:text-white uppercase leading-none">Satış Paneli</h1>
-                <div className="flex items-center gap-2 mt-2">
+                <h1 className="text-2xl md:text-3xl font-black tracking-tighter text-slate-900 dark:text-white uppercase leading-none">Satış Paneli</h1>
+                <div className="flex items-center gap-2 mt-1 md:mt-2">
                   <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                   <span className="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em]">SİSTEM AKTİF • CANLI VERİ</span>
                 </div>
@@ -96,14 +109,16 @@ const HomePage = () => {
           </div>
 
           {isAdmin && (
-            <Button size="large" onClick={() => setIsStatsModalVisible(true)} className="group flex h-14 px-6 rounded-[1.8rem] border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900/60 shadow-xl shadow-blue-500/5 hover:shadow-blue-500/10 transition-all duration-300 items-center gap-3">
-              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 text-white flex items-center justify-center shadow-lg shadow-blue-500/20 group-hover:scale-110 group-hover:rotate-3 transition-transform"><BarChartOutlined className="text-sm" /></div>
-              <span className="font-black text-slate-700 dark:text-slate-200 uppercase tracking-[0.2em] text-[11px]">Analiz</span>
-            </Button>
+            <div className="px-4 md:px-0 w-full md:w-auto">
+              <Button size="large" onClick={() => setIsStatsModalVisible(true)} className="group flex h-14 w-full md:w-auto px-6 rounded-[1.8rem] border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900/60 shadow-xl shadow-blue-500/5 hover:shadow-blue-500/10 transition-all duration-300 items-center justify-center gap-3">
+                <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 text-white flex items-center justify-center shadow-lg shadow-blue-500/20 group-hover:scale-110 group-hover:rotate-3 transition-transform"><BarChartOutlined className="text-sm" /></div>
+                <span className="font-black text-slate-700 dark:text-slate-200 uppercase tracking-[0.2em] text-[11px]">Analiz</span>
+              </Button>
+            </div>
           )}
         </div>
 
-        <div className="flex flex-col lg:flex-row flex-1 p-4 md:px-10 md:pb-10 gap-8 items-start relative">
+        <div className="flex flex-col lg:flex-row flex-1 p-0 md:p-4 md:px-10 mt-4 md:mt-6 gap-8 items-start relative px-4 md:px-10">
           <aside className="w-full lg:w-72 lg:sticky lg:top-36 z-20 shrink-0 self-start">
             <Categories categories={categories} setCategories={setCategories} />
           </aside>
@@ -156,19 +171,18 @@ const HomePage = () => {
         )}
       </div>
 
-     <style dangerouslySetInnerHTML={{ __html: `
+      <style dangerouslySetInnerHTML={{ __html: `
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     .ant-badge-count { z-index: 10; border: none !important; box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important; }
     
-    /* Pagination Düzenlemesi */
     .ant-pagination { 
       display: flex !important; 
       justify-content: center !important; 
       align-items: center !important;
-      flex-wrap: nowrap !important; /* Aşağı kaymayı engeller */
+      flex-wrap: nowrap !important; 
       gap: 2px !important;
-      overflow-x: auto !important; /* Çok fazla sayfa varsa yatayda kaydırır */
+      overflow-x: auto !important; 
       padding: 10px 0 !important;
     }
 

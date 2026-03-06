@@ -46,27 +46,32 @@ const ProductPage = () => {
     refreshData();
   }, [refreshData]);
 
-  const filteredProducts = useMemo(() => {
-    return products
-      .filter((p) => {
-        const title = p.title || "";
-        const matchesSearch = title.toLocaleLowerCase("tr").includes(searchText.toLocaleLowerCase("tr"));
-        const matchesCategory = selectedCategory === "Tümü" || 
-          p.category?.localeCompare(selectedCategory, "tr", { sensitivity: "base" }) === 0;
-        return matchesSearch && matchesCategory;
-      })
-      .sort((a, b) => {
-        if (sortOrder === "price-asc") return a.price - b.price;
-        if (sortOrder === "price-desc") return b.price - a.price;
-        return 0;
-      });
-  }, [products, searchText, selectedCategory, sortOrder]);
+ const filteredProducts = useMemo(() => {
+  return products
+    .filter((p) => {
+      const title = p.title || "";
+      const matchesSearch = title.toLocaleLowerCase("tr").includes(searchText.toLocaleLowerCase("tr"));
+      
+      const productCategory = typeof p.category === "object" && p.category !== null 
+        ? p.category.title 
+        : p.category;
+
+      const matchesCategory = selectedCategory === "Tümü" || 
+        String(productCategory || "").localeCompare(selectedCategory, "tr", { sensitivity: "base" }) === 0;
+        
+      return matchesSearch && matchesCategory;
+    })
+    .sort((a, b) => {
+      if (sortOrder === "price-asc") return a.price - b.price;
+      if (sortOrder === "price-desc") return b.price - a.price;
+      return 0;
+    });
+}, [products, searchText, selectedCategory, sortOrder]);
 
 if (!isAdmin) {
   return (
-    <div className="h-[calc(100vh-140px)] flex flex-col items-center justify-start bg-transparent p-4 overflow-hidden pt-0">
-      
-      <div className="mt-0 w-full flex flex-col items-center">
+<div className="fixed inset-0 h-screen w-screen flex flex-col items-center justify-start bg-transparent p-4 overflow-hidden pt-0">      
+      <div className="mt-24 md:mt-48 w-full flex flex-col items-center">
         <Result
           status="403"
           icon={

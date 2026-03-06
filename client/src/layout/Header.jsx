@@ -69,12 +69,10 @@ const Header = ({ isVisible: propIsVisible }) => {
         setIsTemporaryShow(true);
         setIsBouncing(true);
       }, 0);
-
       const hideTimer = setTimeout(() => {
         setIsTemporaryShow(false);
         setIsBouncing(false);
       }, 2000);
-
       return () => {
         clearTimeout(showTimer);
         clearTimeout(hideTimer);
@@ -118,12 +116,10 @@ const Header = ({ isVisible: propIsVisible }) => {
                 </div>
               )}
             </div>
-
             <div className={`flex-1 max-w-md relative hidden md:block ${!isHomePage && "invisible"}`}>
               <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-500" />
               <input type="text" placeholder="Hızlı ara..." className="w-full pl-9 pr-4 py-1.5 rounded-lg bg-white/50 dark:bg-slate-800/40 text-sm outline-none border-none focus:ring-1 focus:ring-blue-500/50 transition-all text-slate-900 dark:text-white" onChange={(e) => dispatch(setSearch(e.target.value.toLowerCase()))} />
             </div>
-
             <div className="flex items-center gap-2">
               <button 
                 onClick={() => {
@@ -134,9 +130,8 @@ const Header = ({ isVisible: propIsVisible }) => {
               >
                 {dark ? <Sun size={15} /> : <Moon size={15} />}
               </button>
-
               {isPrivilegedUser ? (
-                <Popconfirm title="Çıkış yapılsın mı?" description="Mevcut oturumunuz sonlandırılacaktır." onConfirm={handleLogout} okText="Evet" cancelText="Hayır" centered>
+                <Popconfirm title="Çıkış yapılsın mı?" description="Mevcut oturumunuz sonlandırılacaktır." onConfirm={handleLogout} okText="Evet" cancelText="Hayır" getPopupContainer={(trigger) => trigger.parentElement} centered>
                   <button type="button" className="p-2 text-red-500 bg-red-50/50 dark:bg-red-900/20 rounded-lg border border-red-500/10 hover:bg-red-500 hover:text-white transition-all duration-300">
                     <LogOut size={15} />
                   </button>
@@ -167,11 +162,8 @@ const Header = ({ isVisible: propIsVisible }) => {
         </div>
       </header>
       
-      {/* MOBİL ALT BAR - GÜNCELLENMİŞ HİZA */}
       <div className={`md:hidden fixed bottom-0 left-0 right-0 z-[1001] bg-white/90 dark:bg-slate-950/95 backdrop-blur-2xl border-t border-slate-100 dark:border-slate-800 px-6 py-2 pb-2 flex items-center justify-between shadow-[0_-10px_40px_rgba(0,0,0,0.1)] transition-transform duration-500 ease-in-out ${
-        isTemporaryShow 
-          ? "translate-y-0" 
-          : (!isVisible ? "translate-y-0" : "translate-y-[110%]")
+        isVisible || isTemporaryShow ? "translate-y-0" : "translate-y-[110%]"
       }`}>
         <Link to="/" className={`flex flex-col items-center gap-1 ${location.pathname === "/" ? "text-blue-600" : "text-slate-400"}`}>
           <LayoutDashboard size={20} /><span className="text-[9px] font-black uppercase">Panel</span>
@@ -179,8 +171,6 @@ const Header = ({ isVisible: propIsVisible }) => {
         <Link to="/products" className={`flex flex-col items-center gap-1 ${location.pathname === "/products" ? "text-blue-600" : "text-slate-400"}`}>
           <Package size={20} /><span className="text-[9px] font-black uppercase tracking-tighter">Ürünler</span>
         </Link>
-        
-        {/* Sepet Butonu - mt-0 yapıldı, hizalandı */}
         <div className={`relative flex items-center justify-center transition-transform duration-300 ${isBouncing ? "scale-110" : "scale-100"}`}> 
           <Badge count={cartItems.length} color="#ef4444" offset={[-2, 2]}>
             <button type="button" onClick={() => setIsCartOpen(true)} className={`w-12 h-12 bg-blue-600 text-white rounded-xl shadow-lg flex flex-col items-center justify-center active:scale-90 transition-all ${isBouncing ? "animate-bounce" : ""}`}>
@@ -189,7 +179,6 @@ const Header = ({ isVisible: propIsVisible }) => {
             </button>
           </Badge>
         </div>
-
         <Link to="/bills" className={`flex flex-col items-center gap-1 ${location.pathname === "/bills" ? "text-blue-600" : "text-slate-400"}`}>
           <FileText size={20} /><span className="text-[9px] font-black uppercase">Fatura</span>
         </Link>

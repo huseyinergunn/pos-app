@@ -38,30 +38,30 @@ const CartTotals = ({ onClose }) => {
   };
 
   return (
-    <div className="flex flex-col h-full font-sans bg-white dark:bg-[#0f172a] rounded-2xl overflow-hidden transition-colors duration-200 border border-slate-100 dark:border-slate-800 shadow-xl">
-      <div className="shrink-0 px-3 py-2.5 flex justify-between items-center border-b border-slate-100 dark:border-slate-800/60 bg-white/50 dark:bg-slate-900/50 backdrop-blur-md">
+    <div className="flex flex-col h-[85%] w-[92%] mx-auto font-sans bg-white dark:bg-[#0f172a] rounded-2xl overflow-hidden transition-colors duration-200 border border-slate-100 dark:border-slate-800 shadow-xl">
+      <div className="shrink-0 px-3 py-2 flex justify-between items-center border-b border-slate-100 dark:border-slate-800/60 bg-white dark:bg-slate-900">
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 bg-blue-600 rounded-lg flex items-center justify-center">
-            <ShoppingCartOutlined className="text-white text-[10px]" />
+          <div className="w-6 h-6 bg-blue-600 rounded-lg flex items-center justify-center">
+            <ShoppingCartOutlined className="text-white text-[9px]" />
           </div>
           <div className="flex flex-col">
-            <h2 className="text-[9px] font-black text-slate-700 dark:text-slate-200 uppercase tracking-tight leading-none">
+            <h2 className="text-[8px] font-black text-slate-700 dark:text-slate-200 uppercase tracking-tight leading-none">
               SİPARİŞ
             </h2>
-            <span className="text-[7px] text-blue-500 font-bold uppercase tracking-widest mt-0.5">
+            <span className="text-[6px] text-blue-500 font-bold uppercase tracking-widest mt-0.5">
               {cartItems.length} KALEM
             </span>
           </div>
         </div>
         <button
           onClick={onClose}
-          className="w-7 h-7 flex items-center justify-center text-slate-400 hover:text-red-500 transition-colors bg-slate-50 dark:bg-slate-800 rounded-lg"
+          className="w-6 h-6 flex items-center justify-center text-slate-400 hover:text-red-500 transition-colors bg-slate-50 dark:bg-slate-800 rounded-lg"
         >
-          <CloseOutlined className="text-[10px]" />
+          <CloseOutlined className="text-[9px]" />
         </button>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-2 space-y-1.5 no-scrollbar min-h-0 bg-slate-50/30 dark:bg-black/10">
+      <div className="flex-1 overflow-y-auto p-2 space-y-1.5 no-scrollbar min-h-0 bg-transparent">
         {cartItems.length > 0 ? (
           [...cartItems].reverse().map((item) => (
             <div
@@ -73,7 +73,7 @@ const CartTotals = ({ onClose }) => {
                   <img
                     src={item.img}
                     alt=""
-                    className="w-8 h-8 rounded-lg object-cover border border-slate-200/50 dark:border-slate-700/50"
+                    className="w-7 h-7 rounded-lg object-cover border border-slate-200/50 dark:border-slate-700/50"
                   />
                   <button
                     onClick={() => deleteItem(item)}
@@ -83,10 +83,10 @@ const CartTotals = ({ onClose }) => {
                   </button>
                 </div>
                 <div className="min-w-0">
-                  <h3 className="text-[9px] font-bold text-slate-800 dark:text-slate-200 uppercase truncate w-16 sm:w-20 leading-tight">
+                  <h3 className="text-[8px] font-bold text-slate-800 dark:text-slate-200 uppercase truncate w-16 sm:w-20 leading-tight">
                     {item.title}
                   </h3>
-                  <p className="text-blue-600 dark:text-blue-400 font-black text-[9px]">
+                  <p className="text-blue-600 dark:text-blue-400 font-black text-[8px]">
                     {item.price.toLocaleString("tr-TR")} ₺
                   </p>
                 </div>
@@ -99,7 +99,7 @@ const CartTotals = ({ onClose }) => {
                 >
                   <MinusOutlined style={{ fontSize: "6px" }} />
                 </button>
-                <span className="w-4 text-center font-black text-[9px] text-slate-800 dark:text-white">
+                <span className="w-4 text-center font-black text-[8px] text-slate-800 dark:text-white">
                   {item.quantity}
                 </span>
                 <button
@@ -119,22 +119,22 @@ const CartTotals = ({ onClose }) => {
         )}
       </div>
 
-      <div className="shrink-0 p-3 border-t border-slate-100 dark:border-slate-800/60 bg-white dark:bg-slate-900/90 backdrop-blur-md">
-        <div className="flex justify-between items-end mb-2.5">
+      <div className="shrink-0 p-3 border-t border-slate-100 dark:border-slate-800/60 bg-white dark:bg-slate-900">
+        <div className="flex justify-between items-end mb-2">
           <div className="flex flex-col">
-            <span className="text-[7px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-0.5">
+            <span className="text-[6px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-0.5">
               TOPLAM TUTAR
             </span>
-            <div className="text-xl font-black text-slate-900 dark:text-white tracking-tighter leading-none">
+            <div className="text-lg font-black text-slate-900 dark:text-white tracking-tighter leading-none">
               {Math.floor(grandTotal).toLocaleString("tr-TR")}
-              <span className="text-xs opacity-40">
+              <span className="text-[10px] opacity-40">
                 .{(grandTotal % 1).toFixed(2).split(".")[1]}₺
               </span>
             </div>
           </div>
           <button
             onClick={handleClear}
-            className="text-[8px] font-black text-red-500 hover:underline transition-colors uppercase mb-0.5"
+            className="text-[7px] font-black text-red-500 hover:underline transition-colors uppercase mb-0.5"
           >
             Sıfırla
           </button>
@@ -145,7 +145,7 @@ const CartTotals = ({ onClose }) => {
           block
           disabled={cartItems.length === 0 || !isLoggedIn}
           onClick={() => setIsModalOpen(true)}
-          className="h-9 rounded-xl bg-blue-600 hover:bg-blue-700 font-black text-[9px] uppercase tracking-widest border-none shadow-md shadow-blue-500/20 active:scale-95 transition-transform"
+          className="h-8 rounded-xl bg-blue-600 hover:bg-blue-700 font-black text-[8px] uppercase tracking-widest border-none shadow-md shadow-blue-500/20 active:scale-95 transition-transform"
         >
           {!isLoggedIn ? "OTURUM GEREKLİ" : "SİPARİŞİ ONAYLA"}
         </Button>
@@ -166,7 +166,7 @@ const CartTotals = ({ onClose }) => {
           __html: `
             .no-scrollbar::-webkit-scrollbar { display: none; }
             .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-            .ant-drawer-content, .ant-drawer-wrapper-body { border-radius: 1rem 1rem 0 0 !important; overflow: hidden !important; }
+            .ant-drawer-content, .ant-drawer-wrapper-body { border-radius: 1rem 1rem 0 0 !important; overflow: hidden !important; background: transparent !important; }
           `,
         }}
       />

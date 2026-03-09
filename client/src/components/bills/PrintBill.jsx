@@ -1,6 +1,5 @@
-import { CloseOutlined, PrinterOutlined, SafetyOutlined, FilePdfOutlined } from "@ant-design/icons";
+import { CloseOutlined, SafetyOutlined, FilePdfOutlined } from "@ant-design/icons";
 import { useRef, useEffect } from "react";
-import { useReactToPrint } from "react-to-print";
 import { App } from "antd"; 
 import { TAX_RATE } from "../../config/appConfig";
 import { jsPDF } from "jspdf";
@@ -15,12 +14,6 @@ const PrintBill = ({ isModalOpen, setIsModalOpen, customer }) => {
   const subTotal = totalAmount / taxDivider;
   const taxAmount = totalAmount - subTotal;
   const billNumber = customer?._id ? customer._id.slice(-8).toUpperCase() : "00000000";
-
-  const handlePrint = useReactToPrint({
-    contentRef: componentRef,
-    documentTitle: `e-Fatura-${billNumber}`,
-    onAfterPrint: () => message.success("Yazdırma işlemi başlatıldı."),
-  });
 
   const handleDownloadPDF = async () => {
     message.loading({ content: "PDF Hazırlanıyor...", key: "pdf" });
@@ -69,11 +62,11 @@ const PrintBill = ({ isModalOpen, setIsModalOpen, customer }) => {
         <div className="flex items-center justify-between p-5 border-b dark:border-slate-800 bg-white dark:bg-slate-900 shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-blue-600 text-white rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/30">
-              <PrinterOutlined className="text-lg" />
+              <FilePdfOutlined className="text-lg" />
             </div>
             <div>
               <h3 className="text-sm font-black uppercase tracking-tight dark:text-white leading-none">Fatura Önizleme</h3>
-              <p className="text-[10px] text-slate-400 font-bold mt-1">SİSTEM ÇIKTISI GÖRÜNTÜLENİYOR</p>
+              <p className="text-[10px] text-slate-400 font-bold mt-1">PDF SİSTEM ÇIKTISI</p>
             </div>
           </div>
           <button onClick={() => setIsModalOpen(false)} className="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-red-600 transition-all active:scale-90">
@@ -170,46 +163,19 @@ const PrintBill = ({ isModalOpen, setIsModalOpen, customer }) => {
             onClick={() => setIsModalOpen(false)}
             className="w-full sm:flex-1 h-14 rounded-2xl font-black text-slate-400 bg-slate-100 dark:bg-slate-800 hover:text-slate-600 transition-all uppercase text-[10px] tracking-widest"
           >
-            Kapat
+            Vazgeç
           </button>
           <button 
             onClick={handleDownloadPDF}
-            className="w-full sm:flex-1 h-14 rounded-2xl bg-emerald-500 text-white font-black shadow-xl shadow-emerald-500/20 hover:bg-emerald-600 transition-all uppercase text-[10px] tracking-widest flex items-center justify-center gap-2"
+            className="w-full sm:flex-[2] h-14 rounded-2xl bg-blue-600 text-white font-black shadow-xl shadow-blue-500/20 hover:bg-blue-700 transition-all uppercase text-[10px] tracking-widest flex items-center justify-center gap-2"
           >
             <FilePdfOutlined className="text-lg" />
-            PDF
-          </button>
-          <button 
-            onClick={handlePrint}
-            className="w-full sm:flex-1 h-14 rounded-2xl bg-blue-600 text-white font-black shadow-xl shadow-blue-500/20 hover:bg-blue-700 transition-all uppercase text-[10px] tracking-widest flex items-center justify-center gap-2"
-          >
-            <PrinterOutlined className="text-lg" />
-            Yazdır
+            PDF DOSYASI OLARAK İNDİR
           </button>
         </div>
       </div>
 
       <style dangerouslySetInnerHTML={{ __html: `
-        @media print {
-          @page { size: A4; margin: 0mm !important; }
-          html, body { height: 100%; margin: 0 !important; padding: 0 !important; background: #fff !important; }
-          .fixed, .absolute, button, .shrink-0 { display: none !important; }
-          .custom-scrollbar { overflow: visible !important; }
-          section.bill-content { 
-            position: absolute !important;
-            left: 0 !important;
-            top: 0 !important;
-            width: 210mm !important;
-            height: 297mm !important;
-            margin: 0 !important;
-            padding: 15mm !important;
-            visibility: visible !important;
-            display: block !important;
-            box-shadow: none !important;
-            transform: none !important;
-            border: none !important;
-          }
-        }
         .custom-scrollbar::-webkit-scrollbar { width: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }

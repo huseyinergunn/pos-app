@@ -16,25 +16,21 @@ const PrintBill = ({ isModalOpen, setIsModalOpen, customer }) => {
   const taxAmount = totalAmount - subTotal;
   const billNumber = customer?._id ? customer._id.slice(-8).toUpperCase() : "00000000";
 
-  // Yazdırma Fonksiyonu
   const handlePrint = useReactToPrint({
     contentRef: componentRef,
     documentTitle: `e-Fatura-${billNumber}`,
     onAfterPrint: () => message.success("Yazdırma işlemi başlatıldı."),
   });
 
-  // Profesyonel PDF Kaydetme Fonksiyonu
   const handleDownloadPDF = async () => {
     message.loading({ content: "PDF Hazırlanıyor...", key: "pdf" });
     const element = componentRef.current;
-    
-    // Canvas ayarları: Scale 3 yaparak jilet gibi keskinlik sağlıyoruz
     const canvas = await html2canvas(element, {
       scale: 3, 
       useCORS: true,
       logging: false,
       backgroundColor: "#ffffff",
-      windowWidth: 794, // A4 pixel genişliği (96 DPI)
+      windowWidth: 794,
     });
     
     const imgData = canvas.toDataURL("image/jpeg", 1.0);
@@ -44,7 +40,7 @@ const PrintBill = ({ isModalOpen, setIsModalOpen, customer }) => {
       format: "a4"
     });
 
-    const imgWidth = 210; // A4 Genişliği
+    const imgWidth = 210;
     const imgHeight = (canvas.height * imgWidth) / canvas.width;
     
     pdf.addImage(imgData, "JPEG", 0, 0, imgWidth, imgHeight, undefined, 'FAST');
@@ -68,9 +64,8 @@ const PrintBill = ({ isModalOpen, setIsModalOpen, customer }) => {
     <div className="fixed inset-0 z-[3000] flex items-center justify-center p-2 sm:p-4 bg-black/90 backdrop-blur-xl">
       <div className="absolute inset-0" onClick={() => setIsModalOpen(false)} />
 
-      <div className="relative w-full max-w-[900px] bg-white dark:bg-[#0f172a] rounded-[2rem] shadow-2xl flex flex-col border border-slate-200 dark:border-slate-800 max-h-[90vh] z-10 overflow-hidden animate-in fade-in zoom-in-95 duration-300">
+      <div className="relative w-full max-w-[900px] bg-white dark:bg-[#0f172a] rounded-[2rem] shadow-2xl flex flex-col border border-slate-200 dark:border-slate-800 max-h-[95vh] z-10 overflow-hidden animate-in fade-in zoom-in-95 duration-300">
         
-        {/* Modal Header */}
         <div className="flex items-center justify-between p-5 border-b dark:border-slate-800 bg-white dark:bg-slate-900 shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-blue-600 text-white rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/30">
@@ -86,15 +81,13 @@ const PrintBill = ({ isModalOpen, setIsModalOpen, customer }) => {
           </button>
         </div>
 
-        {/* Preview Area */}
-        <div className="flex-1 bg-slate-200 dark:bg-slate-950 overflow-auto p-4 md:p-8 custom-scrollbar">
-          <div className="w-fit mx-auto shadow-2xl origin-top sm:scale-100 scale-[0.45]">
+        <div className="flex-1 bg-slate-200 dark:bg-slate-950 overflow-auto p-4 flex justify-center custom-scrollbar">
+          <div className="w-fit h-fit shadow-2xl origin-top transition-transform duration-300 sm:scale-100 scale-[0.42] sm:my-4">
             <section 
               ref={componentRef} 
               className="bg-white text-left text-black bill-content p-[15mm] flex flex-col" 
               style={{ width: '210mm', minHeight: '297mm', height: 'fit-content', color: '#000' }}
             >
-              {/* Bill Header */}
               <div className="flex justify-between items-start border-b-[6px] border-black pb-8">
                 <div>
                   <h2 className="text-5xl font-black tracking-tighter text-black">NEXPOS</h2>
@@ -108,7 +101,6 @@ const PrintBill = ({ isModalOpen, setIsModalOpen, customer }) => {
                 </div>
               </div>
 
-              {/* Customer & Date Info */}
               <div className="my-12 grid grid-cols-2 gap-20">
                 <div className="border-l-4 border-black pl-6">
                   <p className="text-slate-400 text-[11px] font-black uppercase tracking-widest mb-3">Müşteri Bilgileri</p>
@@ -122,7 +114,6 @@ const PrintBill = ({ isModalOpen, setIsModalOpen, customer }) => {
                 </div>
               </div>
 
-              {/* Items Table */}
               <table className="w-full mt-4">
                 <thead>
                   <tr className="border-b-4 border-black text-left text-[12px] font-black uppercase tracking-widest text-black">
@@ -144,7 +135,6 @@ const PrintBill = ({ isModalOpen, setIsModalOpen, customer }) => {
                 </tbody>
               </table>
 
-              {/* Totals Section */}
               <div className="mt-auto pt-10 flex justify-end">
                 <div className="w-80 space-y-4">
                   <div className="flex justify-between text-[12px] font-black text-slate-400 uppercase tracking-widest">
@@ -162,7 +152,6 @@ const PrintBill = ({ isModalOpen, setIsModalOpen, customer }) => {
                 </div>
               </div>
 
-              {/* Bill Footer */}
               <div className="mt-20 pt-8 border-t-2 border-dashed border-slate-200 text-center">
                 <p className="text-[11px] font-black text-slate-400 uppercase tracking-[0.6em] mb-6">Teşekkür Ederiz</p>
                 <div className="bg-slate-50 py-4 px-6 inline-flex items-center gap-3 rounded-full">
@@ -176,7 +165,6 @@ const PrintBill = ({ isModalOpen, setIsModalOpen, customer }) => {
           </div>
         </div>
 
-        {/* Modal Footer / Action Buttons */}
         <div className="p-5 border-t dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col sm:flex-row gap-3 shrink-0 items-center">
           <button 
             onClick={() => setIsModalOpen(false)}
@@ -189,14 +177,14 @@ const PrintBill = ({ isModalOpen, setIsModalOpen, customer }) => {
             className="w-full sm:flex-1 h-14 rounded-2xl bg-emerald-500 text-white font-black shadow-xl shadow-emerald-500/20 hover:bg-emerald-600 transition-all uppercase text-[10px] tracking-widest flex items-center justify-center gap-2"
           >
             <FilePdfOutlined className="text-lg" />
-            PDF Olarak Kaydet
+            PDF
           </button>
           <button 
             onClick={handlePrint}
             className="w-full sm:flex-1 h-14 rounded-2xl bg-blue-600 text-white font-black shadow-xl shadow-blue-500/20 hover:bg-blue-700 transition-all uppercase text-[10px] tracking-widest flex items-center justify-center gap-2"
           >
             <PrinterOutlined className="text-lg" />
-            Yazıcıya Gönder
+            Yazdır
           </button>
         </div>
       </div>

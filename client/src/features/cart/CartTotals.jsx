@@ -66,7 +66,7 @@ const CartTotals = ({ onClose }) => {
           [...cartItems].reverse().map((item) => (
             <div
               key={item._id}
-              className="shrink-0 bg-gray-50 dark:bg-[#1e293b] p-3 md:p-4 rounded-[1.5rem] border border-black/5 dark:border-white/10 flex items-center justify-between group transition-all"
+              className="shrink-0 bg-transparent py-3 border-b border-black/5 dark:border-white/5 flex items-center justify-between group transition-all"
             >
               <div className="flex items-center gap-3 md:gap-4">
                 <div className="relative">
@@ -92,7 +92,7 @@ const CartTotals = ({ onClose }) => {
                 </div>
               </div>
 
-              <div className="flex items-center bg-gray-200 dark:bg-black/40 p-1 rounded-2xl">
+              <div className="flex items-center bg-gray-100 dark:bg-white/5 p-1 rounded-2xl">
                 <button
                   onClick={() => decreaseItem(item)}
                   className="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center rounded-xl text-gray-500 dark:text-gray-300 hover:bg-white/30 transition-colors"

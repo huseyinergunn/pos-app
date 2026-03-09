@@ -38,73 +38,73 @@ const CartTotals = ({ onClose }) => {
   };
 
   return (
-    <div className="flex flex-col h-full font-sans bg-white dark:bg-[#0f172a] rounded-t-[2rem] md:rounded-none overflow-hidden">
-      <div className="shrink-0 px-6 py-4 md:py-6 pt-10 md:pt-6 flex justify-between items-center border-b border-black/5 dark:border-white/10">
-        <div className="flex items-center gap-4">
-          <div className="w-10 h-10 bg-blue-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/20">
-            <ShoppingCartOutlined className="text-white text-lg" />
+    <div className="flex flex-col h-full font-sans bg-transparent rounded-t-[1.5rem] md:rounded-none overflow-hidden">
+      <div className="shrink-0 px-4 py-3 md:px-6 md:py-4 pt-8 md:pt-4 flex justify-between items-center border-b border-slate-100 dark:border-slate-800/50">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center shadow-md shadow-blue-500/20">
+            <ShoppingCartOutlined className="text-white text-sm" />
           </div>
           <div>
-            <h2 className="text-[10px] md:text-xs font-black text-gray-800 dark:text-white uppercase tracking-tight">
+            <h2 className="text-[9px] md:text-xs font-black text-slate-800 dark:text-white uppercase tracking-tight">
               SİPARİŞİM
             </h2>
-            <span className="text-[9px] md:text-[10px] text-blue-600 font-bold uppercase tracking-widest">
+            <span className="text-[8px] md:text-[10px] text-blue-600 font-bold uppercase tracking-widest">
               {cartItems.length} Ürün
             </span>
           </div>
         </div>
         <button
           onClick={onClose}
-          className="w-10 h-10 flex items-center justify-center bg-gray-100 dark:bg-white/10 hover:text-red-500 rounded-2xl transition-all active:scale-90"
+          className="w-9 h-9 flex items-center justify-center bg-slate-50 dark:bg-slate-900/50 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-500 rounded-xl transition-all active:scale-90"
         >
-          <CloseOutlined />
+          <CloseOutlined className="text-sm" />
         </button>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-4 space-y-3 no-scrollbar min-h-0">
+      <div className="flex-1 overflow-y-auto p-3 md:p-4 space-y-2 no-scrollbar min-h-0">
         {cartItems.length > 0 ? (
           [...cartItems].reverse().map((item) => (
             <div
               key={item._id}
-              className="shrink-0 bg-transparent py-3 border-b border-black/5 dark:border-white/5 flex items-center justify-between group transition-all"
+              className="shrink-0 bg-slate-50 dark:bg-slate-900/30 p-3 md:p-4 rounded-xl border border-slate-100 dark:border-slate-800/30 flex items-center justify-between group transition-all hover:bg-slate-100 dark:hover:bg-slate-900/50"
             >
-              <div className="flex items-center gap-3 md:gap-4">
+              <div className="flex items-center gap-3">
                 <div className="relative">
                   <img
                     src={item.img}
                     alt=""
-                    className="w-11 h-11 md:w-12 md:h-12 rounded-[1rem] object-cover border border-black/5"
+                    className="w-10 h-10 md:w-11 md:h-11 rounded-lg object-cover border border-slate-200 dark:border-slate-700"
                   />
                   <button
                     onClick={() => deleteItem(item)}
-                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-all scale-75 group-hover:scale-100"
+                    className="absolute -top-1.5 -right-1.5 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center shadow-md opacity-0 group-hover:opacity-100 transition-all scale-75 group-hover:scale-100"
                   >
-                    <DeleteOutlined style={{ fontSize: "10px" }} />
+                    <DeleteOutlined style={{ fontSize: "8px" }} />
                   </button>
                 </div>
                 <div className="min-w-0">
-                  <h3 className="text-[10px] md:text-[11px] font-black text-gray-800 dark:text-white uppercase truncate w-24 md:w-28 leading-none mb-1">
+                  <h3 className="text-[9px] md:text-[10px] font-black text-slate-800 dark:text-white uppercase truncate w-20 md:w-24 leading-none mb-1">
                     {item.title}
                   </h3>
-                  <p className="text-blue-600 font-bold text-[11px] md:text-xs">
+                  <p className="text-blue-600 font-bold text-[10px] md:text-xs">
                     {item.price.toLocaleString("tr-TR")} ₺
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-center bg-gray-100 dark:bg-white/5 p-1 rounded-2xl">
+              <div className="flex items-center bg-white dark:bg-slate-800 p-1 rounded-lg border border-slate-200 dark:border-slate-700">
                 <button
                   onClick={() => decreaseItem(item)}
-                  className="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center rounded-xl text-gray-500 dark:text-gray-300 hover:bg-white/30 transition-colors"
+                  className="w-6 h-6 md:w-7 md:h-7 flex items-center justify-center rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
                 >
                   <MinusOutlined style={{ fontSize: "8px" }} />
                 </button>
-                <span className="w-6 md:w-8 text-center font-black text-[11px] md:text-xs text-gray-800 dark:text-white">
+                <span className="w-5 md:w-6 text-center font-black text-[10px] md:text-xs text-slate-800 dark:text-white">
                   {item.quantity}
                 </span>
                 <button
                   onClick={() => addItem(item)}
-                  className="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center rounded-xl bg-blue-600 text-white shadow-sm transition-transform active:scale-95"
+                  className="w-6 h-6 md:w-7 md:h-7 flex items-center justify-center rounded-lg bg-blue-600 text-white shadow-sm transition-transform active:scale-95"
                 >
                   <PlusOutlined style={{ fontSize: "8px" }} />
                 </button>
@@ -112,31 +112,31 @@ const CartTotals = ({ onClose }) => {
             </div>
           ))
         ) : (
-          <div className="h-full flex flex-col items-center justify-center opacity-30 text-gray-400">
-            <ShoppingCartOutlined className="text-6xl mb-4" />
-            <span className="text-[10px] font-black uppercase tracking-[0.3em]">
+          <div className="h-full flex flex-col items-center justify-center opacity-20 text-slate-400">
+            <ShoppingCartOutlined className="text-5xl md:text-6xl mb-3" />
+            <span className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em]">
               SEPETİNİZ BOŞ
             </span>
           </div>
         )}
       </div>
 
-      <div className="shrink-0 p-6 md:p-8 border-t border-black/5 dark:border-white/10 bg-white/80 dark:bg-[#0f172a]/80 backdrop-blur-lg pb-24 md:pb-8">
-        <div className="flex justify-between items-end mb-4 md:mb-6">
+      <div className="shrink-0 p-4 md:p-6 border-t border-slate-100 dark:border-slate-800/50 bg-white/60 dark:bg-slate-900/60 backdrop-blur-lg pb-20 md:pb-6">
+        <div className="flex justify-between items-end mb-3 md:mb-4">
           <div className="space-y-1">
-            <span className="text-[9px] md:text-[10px] font-black text-gray-400 uppercase tracking-widest block">
+            <span className="text-[8px] md:text-[9px] font-black text-slate-400 uppercase tracking-widest block">
               TOPLAM ÖDEME
             </span>
-            <div className="text-3xl md:text-4xl font-black text-gray-900 dark:text-white tracking-tighter">
+            <div className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white tracking-tighter">
               {Math.floor(grandTotal).toLocaleString("tr-TR")}
-              <span className="text-base md:text-lg opacity-40">
+              <span className="text-sm md:text-base opacity-40">
                 .{(grandTotal % 1).toFixed(2).split(".")[1]}₺
               </span>
             </div>
           </div>
           <button
             onClick={handleClear}
-            className="text-[9px] md:text-[10px] font-black text-red-500 uppercase tracking-widest hover:text-red-600 mb-1 transition-colors"
+            className="text-[8px] md:text-[9px] font-black text-red-500 uppercase tracking-widest hover:text-red-600 transition-colors"
           >
             Temizle
           </button>
@@ -147,7 +147,7 @@ const CartTotals = ({ onClose }) => {
           block
           disabled={cartItems.length === 0 || !isLoggedIn}
           onClick={() => setIsModalOpen(true)}
-          className="h-14 md:h-16 rounded-[1.2rem] bg-blue-600 hover:bg-blue-700 font-black text-[11px] md:text-xs uppercase tracking-widest border-none shadow-xl shadow-blue-600/20"
+          className="h-12 md:h-14 rounded-xl bg-blue-600 hover:bg-blue-700 font-black text-[10px] md:text-xs uppercase tracking-widest border-none shadow-lg shadow-blue-600/20"
         >
           {!isLoggedIn ? "GİRİŞ YAPILMALI" : "SİPARİŞİ TAMAMLA"}
         </Button>
